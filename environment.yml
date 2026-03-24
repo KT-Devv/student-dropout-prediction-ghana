@@ -1,0 +1,24 @@
+name: ghana-dropout-shap
+channels:
+  - pytorch
+  - pyg
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.10
+  - pip
+  - pip:
+    - torch==2.1.0
+    - torch-geometric==2.4.0
+    - scikit-learn==1.4.0
+    - xgboost==2.0.0
+    - flwr==1.5.0
+    - shap==0.44.0
+    - sdv==1.8.0
+    - ctgan==0.7.4
+    - pandas==2.1.0
+    - numpy==1.26.0
+    - matplotlib==3.8.0
+    - seaborn==0.13.0
+    - fairlearn==0.10.0
+    - joblib==1.3.2
