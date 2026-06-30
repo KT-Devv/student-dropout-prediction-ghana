@@ -231,7 +231,7 @@ If you use this repository in academic work, please cite:
 
 # License
 
-This project is released under the MIT License.
+This project is released under the KNUST License.
 
 ---
 
@@ -243,7 +243,7 @@ This project is released under the MIT License.
 - Exploratory Data Analysis ✓
 - Feature Engineering ✓
 - Baseline Models ✓
-- Class Imbalance Experiments (In Progress)
-- Hyperparameter Optimization
-- Explainable AI (SHAP)
-- Final Evaluation
+- Class Imbalance Experiments ✓
+- Hyperparameter Optimization ✓
+- Explainable AI (SHAP) ✓
+- Final Evaluation ✓
