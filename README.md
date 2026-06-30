@@ -1,130 +1,249 @@
-# LightGBM-SHAP Ensemble for Early Dropout Detection in Ghanaian Basic Schools
+# Student Dropout Prediction in Ghanaian Basic Schools Using Machine Learning
 
-**KNUST CANDO Lab · 2025–2026 · Group 5**
+**KNUST – Department of Computer Science**  
+**2025–2026 Academic Year**  
+**Group 5**
 
-A CTGAN-augmented institutional data framework for early identification
-of at-risk pupils in Ghanaian Primary and Junior High Schools, using a
-LightGBM + Random Forest ensemble with SHAP TreeExplainer outputs
-validated by Ghanaian teachers and GES district officers.
+A comprehensive machine learning framework for the early prediction of student dropout in Ghanaian basic schools using institutional records, baseline machine learning models, class imbalance handling (SMOTE and CTGAN), hyperparameter optimization, and explainable artificial intelligence (SHAP).
 
-## Research Summary
+---
 
-| Item | Detail |
-|---|---|
-| Primary model | LightGBM 4.3 + Random Forest (scikit-learn 1.4) |
-| XAI layer | SHAP TreeExplainer — global beeswarm + local waterfall plots |
-| Dataset | Institutional records from ≥10 Ghanaian basic schools + CTGAN augmentation |
-| Fairness | Equal Opportunity & Equalized Odds gaps by gender and urban/rural zone |
-| Target journal | Computers & Education: AI (Elsevier) |
-| Backup journal | Education & Information Technologies (Springer) |
+# Project Overview
 
-## Repository Structure
+Student dropout remains a significant challenge affecting educational outcomes in Ghana. Early identification of students at risk enables timely interventions by teachers, school administrators, and policymakers.
 
-| Folder | Contents |
-|---|---|
-| `/data-raw/` | Original school register records — **never committed, protected by .gitignore** |
-| `/data-processed/` | Cleaned, encoded, SMOTE-balanced datasets ready for training |
-| `/notebooks/` | All experiment notebooks (see below) |
-| `/models/` | Saved LightGBM and RF model checkpoints (joblib format) |
-| `/results/` | Metric outputs, SHAP plots, fairness tables, ablation results |
-| `/paper/` | Draft manuscript files |
+This project develops and evaluates multiple machine learning models to predict student dropout using demographic, academic, attendance, behavioural, and socioeconomic data collected from Ghanaian basic schools.
 
-## Notebooks (to be added during experiment phase)
+The study follows a reproducible end-to-end machine learning pipeline, beginning with data cleaning and exploratory analysis through model development, optimization, explainability, and comparative evaluation.
 
-| Notebook | Purpose |
-|---|---|
-| `01_data_cleaning.ipynb` | Raw register → cleaned dataset pipeline |
-| `02_ctgan_augmentation.ipynb` | CTGAN training, SDMetrics validation, TSTR test |
-| `03_baselines.ipynb` | Logistic Regression, Decision Tree, XGBoost baselines |
-| `04_lightgbm_training.ipynb` | LightGBM + RF ensemble, hyperparameter grid search |
-| `05_shap_analysis.ipynb` | Global beeswarm plots, local waterfall plots, teacher validation prep |
-| `06_fairness_evaluation.ipynb` | Equal Opportunity and Equalized Odds gaps by gender and zone |
-| `07_ablation_study.ipynb` | Four ablation conditions |
+---
 
-## Setup
-```bash
-# Option 1 — pip
-pip install -r requirements.txt
+# Research Objectives
 
-# Option 2 — conda
-conda env create -f environment.yml
-conda activate ghana-dropout-shap
+The project aims to:
+
+- Develop machine learning models for early dropout prediction.
+- Compare the performance of multiple classification algorithms.
+- Investigate the effect of class imbalance handling using SMOTE and CTGAN.
+- Optimize the best-performing model through hyperparameter tuning.
+- Explain model predictions using SHAP.
+- Produce a reproducible machine learning workflow suitable for educational research.
+
+---
+
+# Machine Learning Pipeline
+
+```
+Raw Data
+      │
+      ▼
+Data Cleaning
+      │
+      ▼
+Exploratory Data Analysis
+      │
+      ▼
+Feature Engineering
+      │
+      ▼
+Baseline Models
+      │
+      ▼
+SMOTE vs CTGAN Experiments
+      │
+      ▼
+Hyperparameter Optimization
+      │
+      ▼
+Final Model
+      │
+      ▼
+SHAP Explainability
+      │
+      ▼
+Model Comparison & Evaluation
 ```
 
-## Reproducibility
+---
 
-All experiments use 5 random seeds: **42, 123, 456, 789, 1024**.
-All metrics are reported as mean ± standard deviation across seeds.
-Model checkpoints are saved after each cross-validation fold using `joblib.dump()`.
+# Machine Learning Models
 
-## Team
+The following supervised learning algorithms are evaluated:
+
+- Logistic Regression
+- Decision Tree
+- Random Forest
+- XGBoost
+- LightGBM
+- CatBoost
+
+The best-performing model is selected based on objective evaluation metrics before optimization.
+
+---
+
+# Class Imbalance Experiments
+
+Two strategies are investigated:
+
+### Experiment A
+
+Original Dataset + SMOTE
+
+### Experiment B
+
+Original Dataset + CTGAN Synthetic Data
+
+The effectiveness of both approaches is compared using identical evaluation procedures.
+
+---
+
+# Explainable AI
+
+The final selected model is interpreted using SHAP.
+
+Generated explanations include:
+
+- Global feature importance
+- SHAP summary plots
+- Waterfall plots
+- Force plots
+- Individual prediction explanations
+
+---
+
+# Evaluation Metrics
+
+Each model is evaluated using:
+
+- Accuracy
+- Precision
+- Recall
+- F1-score
+- ROC-AUC
+- Precision-Recall AUC
+- Confusion Matrix
+- Cross Validation
+
+---
+
+# Repository Structure
+
+```
+student-dropout-prediction-ghana/
+│
+├── notebooks/
+│   ├── Notebook_01_Data_Cleaning.ipynb
+│   ├── Notebook_02_EDA.ipynb
+│   ├── Notebook_03_Feature_Engineering.ipynb
+│   ├── Notebook_04_Baseline_Models.ipynb
+│   ├── Notebook_05_Class_Imbalance_Experiments.ipynb
+│   ├── Notebook_06_Model_Optimization.ipynb
+│   ├── Notebook_07_Model_Explainability.ipynb
+│   └── Notebook_08_Final_Evaluation.ipynb
+│
+├── data/
+│   ├── raw/
+│   ├── processed/
+│   └── synthetic/
+│
+├── figures/
+│
+├── models/
+│
+├── results/
+│
+├── requirements.txt
+├── README.md
+└── .gitignore
+```
+
+---
+
+# Technologies
+
+- Python
+- Pandas
+- NumPy
+- Scikit-learn
+- XGBoost
+- LightGBM
+- CatBoost
+- CTGAN
+- SDV
+- SHAP
+- Imbalanced-Learn
+- Matplotlib
+- Seaborn
+- Joblib
+- Google Colab
+
+---
+
+# Reproducibility
+
+The project follows best practices for reproducible machine learning:
+
+- Fixed random seeds
+- Stratified train-test split
+- No data leakage
+- SMOTE applied only to training data
+- Independent test set
+- Pipeline-based preprocessing
+- Saved trained models
+- Version-controlled notebooks
+
+---
+
+# Team
 
 | Name | Student ID | Role |
-|---|---|---|
-| Oheneba Kwaku Tawiah Ntim | 20923785 | Lead researcher |
-| Jude Ahiekpor Kekeli Yao | 20920037 | Literature & baselines |
-| Evangelina Temple | 20917568 | Data collection & preprocessing |
-| Victoria Teye | 20920301 | Model training & evaluation |
-| Kyei Christian Junior | 20923927 | SHAP analysis & fairness |
+|------|------------|------|
+| Oheneba Kwaku Tawiah Ntim | 20923785 | Lead Researcher & Machine Learning Development |
+| Jude Ahiekpor Kekeli Yao | 20920037 | Literature Review & Baseline Models |
+| Evangelina Temple | 20917568 | Data Collection & Preprocessing |
+| Victoria Teye | 20920301 | Model Training & Evaluation |
+| Kyei Christian Junior | 20923927 | Explainable AI & Results Analysis |
 
-**Supervisor:** Eric Opoku Osei (PhD), Department of Computer Science, KNUST, Ghana
-
-## Ethics
-
-This study was approved by the KNUST Committee on Human Research,
-Publications and Ethics (CHRPE). Reference No: [insert upon receipt].
-All pupil data anonymised. Ghana Data Protection Act (2012) compliant.
-
-## Citation
-
-[To be added upon publication]
-```
-
-Commit message: `Update README — Path B LightGBM-SHAP architecture`
+**Supervisor:**  
+Dr. Eric Opoku Osei  
+Department of Computer Science  
+Kwame Nkrumah University of Science and Technology (KNUST)
 
 ---
 
-**STEP 6 — Add .gitignore to protect pupil data**
+# Ethics
 
-**"Add file" → "Create new file"** → name it `.gitignore` → paste:
-```
-# CRITICAL — never commit raw pupil data
-data-raw/
-*.csv
-*.xlsx
-*.xls
+The study uses anonymized educational records collected from participating Ghanaian basic schools.
 
-# Python
-__pycache__/
-*.py[cod]
-*.egg-info/
-.ipynb_checkpoints/
-.virtual_documents/
+All analyses comply with institutional ethical requirements and applicable data protection regulations.
 
-# Model files (large binaries)
-*.pkl
-*.joblib
-
-# Environment
-.env
-venv/
-.venv/
-```
-
-Commit message: `Add .gitignore — protect raw pupil data`
+Confidential student information is excluded from this public repository.
 
 ---
 
-**After all 6 steps your repo will look like this:**
-```
-ghana-basic-dropout-shap/
-├── .gitignore
-├── README.md
-├── requirements.txt
-├── environment.yml
-├── data-raw/
-├── data-processed/
-├── notebooks/
-├── models/
-├── results/
-└── paper/
+# Citation
+
+If you use this repository in academic work, please cite:
+
+> Oheneba Kwaku Tawiah Ntim et al. (2026). *Student Dropout Prediction in Ghanaian Basic Schools Using Machine Learning*. Kwame Nkrumah University of Science and Technology.
+
+---
+
+# License
+
+This project is released under the MIT License.
+
+---
+
+# Status
+
+**Current Phase**
+
+- Data Cleaning ✓
+- Exploratory Data Analysis ✓
+- Feature Engineering ✓
+- Baseline Models ✓
+- Class Imbalance Experiments (In Progress)
+- Hyperparameter Optimization
+- Explainable AI (SHAP)
+- Final Evaluation
