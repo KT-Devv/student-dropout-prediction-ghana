@@ -1,0 +1,4 @@
+Model,Best_CV_F1,Best_Params
+Random Forest,0.9655172413793103,"{'classifier__n_estimators': 100, 'classifier__min_samples_split': 5, 'classifier__min_samples_leaf': 1, 'classifier__max_features': 'sqrt', 'classifier__max_depth': 30}"
+LightGBM,0.9526436781609195,"{'classifier__subsample': 1.0, 'classifier__num_leaves': 31, 'classifier__min_child_samples': 20, 'classifier__max_depth': 20, 'classifier__learning_rate': 0.03, 'classifier__colsample_bytree': 0.6}"
+CatBoost,0.924875283446712,"{'classifier__learning_rate': 0.03, 'classifier__l2_leaf_reg': 7, 'classifier__iterations': 300, 'classifier__depth': 10, 'classifier__border_count': 64}"
