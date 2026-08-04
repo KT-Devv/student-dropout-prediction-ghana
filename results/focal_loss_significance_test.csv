@@ -1,0 +1,2 @@
+Test,Statistic,P_Value,Alpha,Significant,Cohens_d,N_Folds
+Wilcoxon signed-rank,96.0,0.7366322570950097,0.05,False,-0.039622430021534295,25

@@ -1,0 +1,368 @@
+Feature,Mean_Abs_SHAP
+num__average_exam_score,0.06533594138291171
+num__term_2_attendance,0.04021624817854041
+num__term_3_attendance,0.03910409253438593
+num__average_attendance,0.03561752877296445
+num__term_1_attendance,0.033459394877241366
+num__math_exam_score,0.030547702280853697
+cat__family_income_level_Low,0.028471345776683844
+num__science_exam_score,0.02364081204761563
+cat__barriers_to_regular_attendance_Nothing-come regularly,0.02021142956536523
+num__english_exam_score,0.020116028818623854
+num__safety_at_home,0.014407620034938017
+cat__grade_repetition_count_2,0.012249713704811364
+cat__family_income_level_Medium,0.011501534389902146
+cat__behaviour_warnings_punishments_Never,0.01087487578823864
+cat__grade_repetition_count_0,0.009425397793183
+cat__parent_guardian_occupation_No paid work,0.008736438965347856
+cat__family_income_level_High,0.00866854780860703
+cat__daily_study_hours_at_home_Less than 1 hr,0.008190253596548729
+cat__missed_school_for_choreswork_Yes,0.008127718980179312
+cat__parent_guardian_education_level_JHS,0.008093665793562865
+num__home_has_electricity,0.007513877564016281
+cat__parent_guardian_education_level_Tertiary,0.007318604562218309
+cat__own_textbooks_No textbooks,0.007009414184550834
+cat__missed_school_due_to_illness_Yes-more than once,0.006241817340162674
+num__class_participation,0.006148317298774666
+cat__barriers_to_regular_attendance_Work to earn,0.00577650376199383
+cat__behaviour_warnings_punishments_2-3 times,0.0057739509272655394
+cat__own_textbooks_Yes-some subjects,0.005768005110598647
+num__teacher_support_rating,0.005192911117554241
+cat__parent_guardian_occupation_Employed,0.004980854919606551
+cat__missed_school_for_choreswork_No,0.004776768797121831
+cat__class_level_JHS2,0.004613006545659316
+cat__missed_school_due_to_illness_No,0.00401649091141476
+cat__parent_attends_school_events_Always,0.0037465854730792656
+cat__mode_of_transport_to_school_Walk,0.00364402686021331
+cat__school_code_SHI,0.003422704784023588
+cat__parent_attends_school_events_Rarely,0.0034004020876164513
+cat__parent_attends_school_events_Never,0.003079255811792164
+cat__school_type_Private,0.0029849085843308243
+cat__class_level_JHS1,0.0029314390692805146
+cat__travel_time_to_school_More than 1 hour,0.0026775884891211883
+cat__travel_time_to_school_15-30 min,0.0025737529768626094
+num__age_at_start_of_academic_year,0.0025572848527957155
+cat__daily_study_hours_at_home_More than 2 hrs,0.002275036412116498
+num__safety_at_school,0.002255431619141624
+cat__parent_guardian_occupation_Not collected,0.0022042835788775666
+num__school_enjoyment,0.0021684178935369633
+cat__school_type_Public,0.0021097232294625644
+cat__no_of_siblings_in_school_r,0.002056577595710813
+cat__school_code_KNU_JHS,0.0019951769241186076
+cat__school_code_WEWE,0.0019409620528116037
+cat__travel_time_to_school_Less than 15 min,0.0018309228530366973
+cat__behaviour_warnings_punishments_Once,0.0017383269849273832
+cat__missed_school_due_to_illness_Yes-once,0.0014810444737887736
+cat__leap_beneficiary_status_Yes,0.0014446629871559696
+cat__no_of_siblings_in_school_3,0.001388350112964869
+cat__gender_Male,0.0013229154675736396
+cat__class_level_P4,0.0012978412047279012
+"cat__missed_school_due_to_illness_Yes, once",0.0012624042324600045
+cat__parent_guardian_education_level_SHS,0.0011707018020890706
+cat__social_studies_exam_score_87,0.001155680161857475
+cat__govt_support_Don't know,0.0011500644999308026
+cat__parent_guardian_occupation_Trading/market,0.0010512961628089755
+cat__no_of_siblings_in_school_1,0.0010456425153294146
+cat__parent_guardian_occupation_Farming/fishing,0.0010382395182345966
+cat__gender_Female,0.0009809452273720196
+cat__geographic_zone_Rural,0.0008727635154645825
+cat__geographic_zone_Peri-urban,0.0008539726215788286
+cat__parent_guardian_occupation_Skilled trade,0.0008461773570691813
+cat__parent_attends_school_events_Sometimes,0.0008333832493103834
+cat__mode_of_transport_to_school_Car/trotro/bus,0.000803185839522142
+cat__social_studies_exam_score_56,0.000801987097892759
+cat__no_of_siblings_in_school_2,0.0007908212045023998
+cat__barriers_to_regular_attendance_Help at home,0.0007577813404744406
+cat__grade_repetition_count_2.5,0.0007072371828440612
+cat__grade_repetition_count_3,0.000698128188320477
+cat__leap_beneficiary_status_No,0.0006929744577334247
+cat__social_studies_exam_score_57,0.0006617491556756041
+cat__govt_support_No,0.0006609727252096195
+cat__travel_time_to_school_30-60 min,0.0006597093234323496
+num__school_feeding_status,0.0006199491431913434
+cat__barriers_to_regular_attendance_Safety on way,0.0006088775988154597
+cat__daily_study_hours_at_home_1-2 hrs,0.0006007930509005837
+cat__social_studies_exam_score_47,0.0005631902533510792
+cat__no_of_siblings_in_school_1.9,0.0005591838800546095
+cat__govt_support_Yes,0.0005554841272700665
+cat__social_studies_exam_score_30,0.0005029691343117413
+cat__social_studies_exam_score_55,0.0004932402710314677
+cat__social_studies_exam_score_50,0.0004894662917017445
+cat__data_source_Questionnaire,0.0004117373504345529
+cat__own_textbooks_Yes-all subjects,0.00039418422949113194
+cat__parent_attends_school_events_Often,0.0003846987563033989
+cat__parent_guardian_education_level_Don't know,0.00035467734227526414
+cat__behaviour_warnings_punishments_More than 3 times,0.00034566210537248835
+cat__grade_repetition_count_1,0.0003409387139246264
+cat__extracurricular_activities_1 activity,0.00033560752748163484
+cat__barriers_to_regular_attendance_Long distance/transport,0.00032407846082420545
+cat__no_of_siblings_in_school_4,0.00030772169967427767
+cat__leap_beneficiary_status_Unknown,0.00030751301227405816
+cat__school_code_AYED_RC,0.0002939754813447931
+cat__social_studies_exam_score_58,0.0002884757505727804
+cat__social_studies_exam_score_48,0.000274053696356002
+cat__social_studies_exam_score_46,0.00022366675417064843
+cat__own_textbooks_No-borrow/share,0.0002059536523372936
+cat__social_studies_exam_score_51.6,0.00020519928135563935
+cat__social_studies_exam_score_68,0.0001813422917050564
+cat__social_studies_exam_score_52,0.00017275167765079075
+cat__grade_repetition_count_0.1,0.0001652546440531958
+cat__grade_repetition_count_0.8,0.00016155388308044846
+cat__social_studies_exam_score_60,0.00015703252753948845
+cat__no_of_siblings_in_school_2.3,0.00015634861739210868
+cat__no_of_siblings_in_school_6,0.00014669761961640308
+cat__parent_guardian_education_level_Primary,0.00014622459392850027
+cat__extracurricular_activities_2 activities,0.0001437987187662598
+cat__social_studies_exam_score_49.3,0.0001246338455664755
+cat__grade_repetition_count_1.1,0.00012049160536384248
+cat__class_level_P6,0.00010911665318935599
+cat__social_studies_exam_score_63,0.0001079237110807902
+cat__no_of_siblings_in_school_0,8.898865601175247e-05
+cat__social_studies_exam_score_36.1,8.604087331734358e-05
+cat__social_studies_exam_score_54,7.754706672165727e-05
+cat__missed_school_for_choreswork_No ,7.589329366739162e-05
+cat__social_studies_exam_score_53.4,6.744438588237757e-05
+cat__social_studies_exam_score_43.7,6.611043629379324e-05
+cat__social_studies_exam_score_65,6.422324271868028e-05
+cat__social_studies_exam_score_36,6.160206986288735e-05
+cat__social_studies_exam_score_94,5.909557173488144e-05
+cat__no_of_siblings_in_school_1.7,5.856335430088231e-05
+cat__no_of_siblings_in_school_2.9,5.4115998853588585e-05
+cat__social_studies_exam_score_43,5.2398825257682593e-05
+cat__grade_repetition_count_0.9,4.383383635392317e-05
+cat__social_studies_exam_score_44.9,4.3739881275137476e-05
+cat__social_studies_exam_score_57.7,4.332530728005619e-05
+cat__social_studies_exam_score_74,4.2563672357419786e-05
+cat__social_studies_exam_score_64,4.223980761422057e-05
+cat__no_of_siblings_in_school_0.7,4.0727528777427245e-05
+cat__no_of_siblings_in_school_5,4.046048981935554e-05
+cat__grade_repetition_count_1.3,3.8902660820536605e-05
+cat__social_studies_exam_score_71,3.726036074696544e-05
+cat__no_of_siblings_in_school_Not collected,3.654952776113125e-05
+cat__social_studies_exam_score_51,3.4667437153294146e-05
+cat__social_studies_exam_score_59,3.0510435565905755e-05
+"cat__missed_school_due_to_illness_Yes, more than once",2.984725032743138e-05
+cat__grade_repetition_count_0.2,2.854629027718333e-05
+cat__social_studies_exam_score_72,2.8266495521477136e-05
+cat__social_studies_exam_score_67,2.78684604334859e-05
+cat__no_of_siblings_in_school_4.3,2.753379656102229e-05
+cat__social_studies_exam_score_42.2,2.5955168568804783e-05
+cat__social_studies_exam_score_61,2.5954668114379805e-05
+cat__no_of_siblings_in_school_21,2.4466087553066738e-05
+cat__grade_repetition_count_0.7,1.9835907167596277e-05
+cat__no_of_siblings_in_school_2.8,1.9099088696032633e-05
+cat__social_studies_exam_score_59.2,1.878880954773363e-05
+cat__social_studies_exam_score_40,1.8110978973461603e-05
+cat__social_studies_exam_score_44,1.7279198882613417e-05
+cat__social_studies_exam_score_53.5,1.548851293575699e-05
+cat__grade_repetition_count_0.6,1.4231315563643114e-05
+cat__social_studies_exam_score_34,1.395355423262817e-05
+cat__social_studies_exam_score_58.5,1.3742948645325644e-05
+cat__barriers_to_regular_attendance_Health problems,1.3378489174490141e-05
+cat__no_of_siblings_in_school_8,1.1030002025715942e-05
+cat__social_studies_exam_score_74.2,1.0923640376980039e-05
+cat__no_of_siblings_in_school_3.3,1.0883669649100073e-05
+cat__grade_repetition_count_0.5,1.075075888789777e-05
+cat__grade_repetition_count_0.3,1.0628844151006385e-05
+cat__social_studies_exam_score_69.1,1.0359157762335883e-05
+cat__grade_repetition_count_0.4,9.801868344690296e-06
+cat__no_of_siblings_in_school_4.1,9.114665584505263e-06
+cat__no_of_siblings_in_school_2.2,8.441350723061297e-06
+cat__social_studies_exam_score_85,8.427734799996673e-06
+cat__social_studies_exam_score_62.9,8.242242891491657e-06
+cat__no_of_siblings_in_school_3.9,7.069240904013929e-06
+cat__social_studies_exam_score_53,6.5979635057957886e-06
+cat__travel_time_to_school_Don't know,5.807050749917702e-06
+cat__social_studies_exam_score_96,3.5630893884875673e-06
+cat__social_studies_exam_score_97,3.556963130147117e-06
+cat__social_studies_exam_score_61.2,3.4802190750270547e-06
+cat__social_studies_exam_score_57.4,2.6397257208739788e-06
+cat__grade_repetition_count_1.2,2.430254199446885e-06
+cat__social_studies_exam_score_75,7.311649469978902e-07
+cat__social_studies_exam_score_77,5.886195392019469e-07
+cat__social_studies_exam_score_72.3,0.0
+cat__social_studies_exam_score_72.1,0.0
+cat__social_studies_exam_score_70.9,0.0
+cat__social_studies_exam_score_71.4,0.0
+cat__social_studies_exam_score_75.2,0.0
+cat__social_studies_exam_score_75.4,0.0
+cat__social_studies_exam_score_73.9,0.0
+cat__social_studies_exam_score_73.8,0.0
+cat__social_studies_exam_score_71.8,0.0
+cat__social_studies_exam_score_71.7,0.0
+cat__social_studies_exam_score_73.6,0.0
+cat__social_studies_exam_score_73.4,0.0
+cat__social_studies_exam_score_73,0.0
+cat__social_studies_exam_score_72.8,0.0
+cat__social_studies_exam_score_64.1,0.0
+cat__social_studies_exam_score_64.5,0.0
+cat__social_studies_exam_score_63.9,0.0
+cat__social_studies_exam_score_63.2,0.0
+cat__social_studies_exam_score_62.3,0.0
+cat__social_studies_exam_score_62.8,0.0
+cat__social_studies_exam_score_60.7,0.0
+cat__social_studies_exam_score_60.4,0.0
+cat__social_studies_exam_score_60.9,0.0
+cat__social_studies_exam_score_60.8,0.0
+cat__data_source_Both,0.0
+cat__family_income_level_Don't know,0.0
+cat__social_studies_exam_score_66.2,0.0
+cat__social_studies_exam_score_66.1,0.0
+cat__social_studies_exam_score_66,0.0
+cat__social_studies_exam_score_65.9,0.0
+cat__social_studies_exam_score_67.7,0.0
+cat__social_studies_exam_score_68.4,0.0
+cat__social_studies_exam_score_66.7,0.0
+cat__social_studies_exam_score_66.6,0.0
+cat__social_studies_exam_score_68.7,0.0
+cat__social_studies_exam_score_69,0.0
+cat__social_studies_exam_score_69.4,0.0
+cat__social_studies_exam_score_69.5,0.0
+cat__social_studies_exam_score_69.6,0.0
+cat__social_studies_exam_score_69.8,0.0
+cat__social_studies_exam_score_68.6,0.0
+cat__social_studies_exam_score_67.6,0.0
+cat__social_studies_exam_score_70.4,0.0
+cat__social_studies_exam_score_70,0.0
+cat__social_studies_exam_score_70.7,0.0
+cat__social_studies_exam_score_70.6,0.0
+cat__social_studies_exam_score_71.2,0.0
+cat__social_studies_exam_score_71.3,0.0
+cat__social_studies_exam_score_64.8,0.0
+cat__social_studies_exam_score_65.1,0.0
+cat__social_studies_exam_score_65.3,0.0
+cat__social_studies_exam_score_65.4,0.0
+cat__social_studies_exam_score_65.5,0.0
+cat__social_studies_exam_score_65.7,0.0
+cat__social_studies_exam_score_62,0.0
+cat__social_studies_exam_score_61.5,0.0
+cat__family_income_level_Hgh,0.0
+cat__parent_attends_school_events_Alwaya,0.0
+cat__social_studies_exam_score_93,0.0
+cat__social_studies_exam_score_92,0.0
+cat__social_studies_exam_score_91,0.0
+cat__social_studies_exam_score_90,0.0
+cat__social_studies_exam_score_89.7,0.0
+cat__social_studies_exam_score_89,0.0
+cat__social_studies_exam_score_88.3,0.0
+cat__social_studies_exam_score_88,0.0
+cat__social_studies_exam_score_87.9,0.0
+cat__social_studies_exam_score_87.7,0.0
+cat__social_studies_exam_score_87.2,0.0
+cat__social_studies_exam_score_86.5,0.0
+cat__social_studies_exam_score_86.4,0.0
+cat__social_studies_exam_score_86.2,0.0
+cat__social_studies_exam_score_86.1,0.0
+cat__social_studies_exam_score_86,0.0
+cat__social_studies_exam_score_85.7,0.0
+cat__social_studies_exam_score_59.5,0.0
+cat__social_studies_exam_score_58.8,0.0
+cat__social_studies_exam_score_58.9,0.0
+cat__social_studies_exam_score_56.2,0.0
+cat__social_studies_exam_score_55.4,0.0
+cat__social_studies_exam_score_58.2,0.0
+cat__social_studies_exam_score_58.4,0.0
+cat__social_studies_exam_score_84,0.0
+cat__social_studies_exam_score_83.8,0.0
+cat__social_studies_exam_score_81.6,0.0
+cat__social_studies_exam_score_81.7,0.0
+cat__social_studies_exam_score_81.9,0.0
+cat__social_studies_exam_score_82,0.0
+cat__social_studies_exam_score_82.2,0.0
+cat__social_studies_exam_score_83,0.0
+cat__social_studies_exam_score_77.3,0.0
+cat__social_studies_exam_score_77.1,0.0
+cat__social_studies_exam_score_76.3,0.0
+cat__social_studies_exam_score_76,0.0
+cat__social_studies_exam_score_75.5,0.0
+cat__social_studies_exam_score_75.8,0.0
+cat__social_studies_exam_score_81,0.0
+cat__social_studies_exam_score_80,0.0
+cat__social_studies_exam_score_79.5,0.0
+cat__social_studies_exam_score_79,0.0
+cat__social_studies_exam_score_78.7,0.0
+cat__social_studies_exam_score_78.4,0.0
+cat__social_studies_exam_score_78,0.0
+cat__social_studies_exam_score_77.8,0.0
+cat__social_studies_exam_score_77.6,0.0
+cat__social_studies_exam_score_77.4,0.0
+cat__social_studies_exam_score_73.7,0.0
+cat__social_studies_exam_score_74.3,0.0
+cat__no_of_siblings_in_school_1.6,0.0
+cat__no_of_siblings_in_school_1.1,0.0
+cat__no_of_siblings_in_school_0.6,0.0
+cat__no_of_siblings_in_school_1.4,0.0
+cat__no_of_siblings_in_school_1.2,0.0
+cat__social_studies_exam_score_54.7,0.0
+cat__social_studies_exam_score_52.5,0.0
+cat__social_studies_exam_score_52.4,0.0
+cat__social_studies_exam_score_52.6,0.0
+cat__social_studies_exam_score_50.4,0.0
+cat__mode_of_transport_to_school_Bicycle/motorbike,0.0
+cat__social_studies_exam_score_49.6,0.0
+cat__travel_time_to_school_Less than 15 minutes,0.0
+cat__social_studies_exam_score_95,0.0
+cat__no_of_siblings_in_school_3.2,0.0
+cat__no_of_siblings_in_school_3.1,0.0
+cat__no_of_siblings_in_school_23,0.0
+cat__no_of_siblings_in_school_22,0.0
+cat__no_of_siblings_in_school_2.7,0.0
+cat__no_of_siblings_in_school_2.4,0.0
+cat__no_of_siblings_in_school_2.5,0.0
+cat__no_of_siblings_in_school_2.6,0.0
+cat__no_of_siblings_in_school_16,0.0
+cat__no_of_siblings_in_school_17,0.0
+cat__no_of_siblings_in_school_15,0.0
+cat__no_of_siblings_in_school_2.1,0.0
+cat__social_studies_exam_score_48.4,0.0
+cat__social_studies_exam_score_48.8,0.0
+cat__social_studies_exam_score_49,0.0
+cat__no_of_siblings_in_school_12,0.0
+cat__social_studies_exam_score_41,0.0
+cat__social_studies_exam_score_42,0.0
+cat__no_of_siblings_in_school_11,0.0
+cat__no_of_siblings_in_school_10,0.0
+cat__social_studies_exam_score_45,0.0
+cat__social_studies_exam_score_47.2,0.0
+cat__social_studies_exam_score_54.2,0.0
+cat__social_studies_exam_score_54.3,0.0
+cat__no_of_siblings_in_school_0.4,0.0
+cat__parent_guardian_education_level_No formal education,0.0
+cat__no_of_siblings_in_school_0.8,0.0
+cat__no_of_siblings_in_school_31,0.0
+cat__no_of_siblings_in_school_3.6,0.0
+cat__no_of_siblings_in_school_3.7,0.0
+cat__no_of_siblings_in_school_3.5,0.0
+cat__no_of_siblings_in_school_3.4,0.0
+cat__grade_repetition_count_4+,0.0
+cat__grade_repetition_count_2.3,0.0
+cat__no_of_siblings_in_school_9,0.0
+cat__no_of_siblings_in_school_5.1,0.0
+cat__no_of_siblings_in_school_5.3,0.0
+cat__no_of_siblings_in_school_5.9,0.0
+cat__no_of_siblings_in_school_55,0.0
+cat__no_of_siblings_in_school_7,0.0
+cat__no_of_siblings_in_school_5.2,0.0
+cat__no_of_siblings_in_school_3.8,0.0
+cat__no_of_siblings_in_school_4.2,0.0
+cat__no_of_siblings_in_school_4.4,0.0
+cat__no_of_siblings_in_school_4.5,0.0
+cat__no_of_siblings_in_school_4.6,0.0
+cat__no_of_siblings_in_school_4.9,0.0
+cat__no_of_siblings_in_school_43,0.0
+cat__missed_school_for_choreswork_yYes,0.0
+cat__class_level_P5,0.0
+"cat__own_textbooks_Yes, for some",0.0
+cat__missed_school_for_choreswork_no,0.0
+"cat__own_textbooks_Yes , for some",0.0
+cat__social_studies_exam_score_25,0.0
+cat__social_studies_exam_score_22,0.0
+"cat__own_textbooks_Yes , for all subjects",0.0
+cat__social_studies_exam_score_33,0.0
+cat__missed_school_for_choreswork_yes,0.0
+"cat__missed_school_due_to_illness_ Yes, more than once",0.0
+cat__missed_school_due_to_illness_No ,0.0
+cat__missed_school_due_to_illness_y,0.0
+cat__barriers_to_regular_attendance_Other,0.0
+cat__extracurricular_activities_3 activities,0.0
+cat__extracurricular_activities_4 or more,0.0

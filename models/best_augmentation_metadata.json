@@ -1,0 +1,8 @@
+{
+    "best_experiment": "CTGAN_500",
+    "training_rows": 1300,
+    "dropout_rate": 0.4415,
+    "f1": 0.9843,
+    "roc_auc": 0.9963,
+    "pr_auc": 0.9778
+}
