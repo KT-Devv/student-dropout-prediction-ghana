@@ -1,0 +1,4 @@
+Model,Mean_AUC_PR,SD_AUC_PR,N_Folds
+Baseline LightGBM,0.9868,0.0207,25
+LightGBM + Composite Features,0.9879,0.0194,25
+E-LightGBM (Proposed),0.986,0.0196,25

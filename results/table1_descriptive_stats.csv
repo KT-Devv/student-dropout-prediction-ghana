@@ -1,0 +1,9 @@
+,Mean,SD,Min,Max
+term_1_attendance,80.747,16.494,20.0,100.5
+term_2_attendance,82.966,13.916,10.0,102.9
+term_3_attendance,80.597,20.98,0.0,99.0
+average_exam_score,66.926,11.287,20.5,94.0
+social_studies_exam_score,105.53,60.301,0.0,201.0
+attendance_risk_index,0.187,0.173,0.013,0.92
+socioeconomic_vulnerability_score,0.407,0.275,0.0,1.0
+behavioral_engagement_index,0.608,0.231,0.057,1.0
