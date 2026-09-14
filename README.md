@@ -132,19 +132,22 @@ Each model is evaluated using:
 student-dropout-prediction-ghana/
 │
 ├── notebooks/
-│   ├── Notebook_01_Data_Cleaning.ipynb
-│   ├── Notebook_02_EDA.ipynb
-│   ├── Notebook_03_Feature_Engineering.ipynb
-│   ├── Notebook_04_Baseline_Models.ipynb
-│   ├── Notebook_05_Class_Imbalance_Experiments.ipynb
-│   ├── Notebook_06_Model_Optimization.ipynb
-│   ├── Notebook_07_Model_Explainability.ipynb
-│   └── Notebook_08_Final_Evaluation.ipynb
+│   ├── Notebook 1 — Data Cleaning & Preprocessing.ipynb
+│   ├── Notebook 2 – Exploratory Data Analysis (EDA).ipynb
+│   ├── Notebook 3 – Feature Engineering.ipynb
+│   ├── Notebook 4 - Baselines.ipynb
+│   ├── Notebook 5 – Class Imbalance Experiments (SMOTE vs CTGAN).ipynb
+│   ├── Notebook 5b – Data Augmentation Experiments (SMOTE vs CTGAN).ipynb
+│   ├── Notebook 6 – Model Engineering & Proposed Model.ipynb
+│   ├── Notebook 6b - Focal Loss Engineering (E-LightGBM).ipynb
+│   ├── Notebook 7 – Explainable AI (SHAP Analysis).ipynb
+│   ├── Notebook 8 – Final Evaluation, Comparison & Dissertation Outputs.ipynb
+│   └── Notebook 9 - Negative Results Diagnostic.ipynb
 │
-├── data/
-│   ├── raw/
-│   ├── processed/
-│   └── synthetic/
+├── data-raw
+│   
+├── data-processed 
+│   
 │
 ├── figures/
 │
@@ -152,6 +155,7 @@ student-dropout-prediction-ghana/
 │
 ├── results/
 │
+├── losses.py
 ├── requirements.txt
 ├── README.md
 └── .gitignore
