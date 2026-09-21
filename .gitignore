@@ -1,0 +1,13 @@
+# Pupil-level data is never committed (ethics: HuSSREC/AP/543/VOL. 5)
+data-raw/
+data-processed/cleaned_data.csv
+data-processed/*.xlsx
+
+# But DO commit results/ — Q4 failed because the diagnostic CSVs backing
+# Table 5, the MDE and the zero-flip claim were not in the repository.
+# Nothing under results/ is ignored here, deliberately.
+
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+catboost_info/
