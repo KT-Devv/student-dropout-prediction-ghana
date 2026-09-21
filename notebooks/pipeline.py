@@ -119,9 +119,39 @@ def preprocess_inside_fold(df_train, df_val, target_col=TARGET, verbose=False):
                 d[col] = s.clip(lower=0.0, upper=ATTENDANCE_MAX)
     meta["n_attendance_clipped"] = n_clipped
 
-    # --- 5. free-text numerics in the behaviour columns ---------------
-    for col in BEHAVIOR_COLS.values():
+    # --- 5. columns stored as TEXT that are really numbers ------------
+    # grade_repetition_count (20 distinct), no_of_siblings_in_school (67),
+    # social_studies_exam_score (202) all arrive as object dtype. Left as
+    # text they are label-encoded alphabetically, so "10" sorts before "2".
+    for col in NUMERIC_COERCE_COLS:
         if col in train.columns:
+            for d in (train, val):
+                d[col] = to_numeric_freetext(d[col])
+
+    # --- 5b. suspect columns: act on the declared decision ------------
+    for col, spec in SUSPECT_COLUMNS.items():
+        if col not in train.columns:
+            continue
+        if spec["action"] == "rescale":
+            lo, hi = spec["valid_range"]
+            for d in (train, val):
+                s_ = pd.to_numeric(d[col], errors="coerce")
+                # only rescale if the column really is on a doubled scale
+                d[col] = np.where(s_ > hi, s_ / 2.0, s_)
+            meta.setdefault("rescaled", []).append(col)
+        elif spec["action"] == "keep":
+            meta.setdefault("suspect_kept", []).append(col)
+        # "exclude" is handled by drop_reason() at step 1
+
+    # --- 5c. exam scores clipped to their scale -----------------------
+    for col in EXAM_SCORE_COLS:
+        if col in train.columns and col not in SUSPECT_COLUMNS:
+            for d in (train, val):
+                d[col] = pd.to_numeric(d[col], errors="coerce").clip(0, EXAM_SCORE_MAX)
+
+    # --- 5d. free-text numerics in the behaviour columns --------------
+    for col in BEHAVIOR_COLS.values():
+        if col in train.columns and col not in ORDINAL_MAPS:
             for d in (train, val):
                 d[col] = to_numeric_freetext(d[col])
 
@@ -144,6 +174,20 @@ def preprocess_inside_fold(df_train, df_val, target_col=TARGET, verbose=False):
                 d[col + "_missing"] = mapped.isna().astype(int)
                 d[col] = mapped
             meta.setdefault("ordinal_applied", []).append(col)
+
+    # --- 7b. non-response indicators for substantially missing columns --
+    # extracurricular_activities is 24.9% missing AND is an ingredient of
+    # behavioral_engagement_index. The R01 pipeline ran .fillna(0), recording
+    # 249 pupils as doing zero activities when in fact nobody answered — a
+    # quarter of that composite was fabricated. Here the non-response is
+    # preserved as a flag and the value is imputed from TRAINING data only.
+    for col, rate in HIGH_MISSINGNESS.items():
+        flag = col + "_missing"
+        if col in train.columns and rate >= MISSINGNESS_INDICATOR_THRESHOLD \
+                and flag not in train.columns:
+            for d in (train, val):
+                d[flag] = d[col].isna().astype(int)
+            meta.setdefault("missingness_flags", []).append(flag)
 
     # --- 8. empty and constant columns, decided on train --------------
     train = train.dropna(axis=1, how="all")
