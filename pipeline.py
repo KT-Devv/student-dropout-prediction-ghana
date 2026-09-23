@@ -58,9 +58,12 @@ def canonicalise(series: pd.Series, colname: str) -> pd.Series:
         if v is None or (isinstance(v, float) and np.isnan(v)):
             return np.nan
         k = str(v).strip().lower()
-        if k in ("", "nan", "none", "na"):
+        if k in NA_TOKENS:
             return np.nan
-        return mapping.get(k, str(v).strip())
+        if k in mapping:
+            out = mapping[k]
+            return np.nan if out is None else out
+        return str(v).strip()
 
     return series.map(one)
 
@@ -103,7 +106,16 @@ def preprocess_inside_fold(df_train, df_val, target_col=TARGET, verbose=False):
     for d in (train, val):
         d[target_col] = binarise_target(d[target_col])
 
-    # --- 3. canonicalise known spelling variants ----------------------
+    # --- 3. non-response tokens -> NaN, then canonicalise variants ----
+    # "Don't know", "Not collected", "Unknown" etc. are non-response, not a
+    # category and never a midpoint on an ordinal scale.
+    for col in list(train.columns):
+        if col == target_col or not is_text(train[col]):
+            continue
+        for d in (train, val):
+            s_ = d[col].astype("object")
+            low = s_.astype(str).str.strip().str.lower()
+            d[col] = s_.where(~low.isin(NA_TOKENS) & s_.notna(), np.nan)
     for col in CATEGORY_CANONICAL:
         if col in train.columns:
             for d in (train, val):
@@ -119,12 +131,30 @@ def preprocess_inside_fold(df_train, df_val, target_col=TARGET, verbose=False):
                 d[col] = s.clip(lower=0.0, upper=ATTENDANCE_MAX)
     meta["n_attendance_clipped"] = n_clipped
 
+    # --- 4b. corrupted count columns ------------------------------------
+    # Fractional values (0.3 repeats, 2.7 siblings) are the fingerprint of
+    # mean imputation done upstream, probably in the spreadsheet on the full
+    # dataset. Discard them, flag them, and re-impute from the training fold.
+    for col, spec in COUNT_COLS.items():
+        if col not in train.columns:
+            continue
+        n_bad = 0
+        for d in (train, val):
+            raw_ = d[col].astype(str).str.strip().str.lower()
+            raw_ = raw_.replace({k.lower(): str(v) for k, v in spec["strings"].items()})
+            num = pd.to_numeric(raw_, errors="coerce")
+            bad = num.notna() & ((num % 1 != 0) | (num < 0) | (num > spec["max"]))
+            n_bad += int(bad.sum())
+            d[col + "_missing"] = (num.isna() | bad).astype(int)
+            d[col] = num.where(~bad, np.nan)
+        meta.setdefault("count_values_invalidated", {})[col] = n_bad
+
     # --- 5. columns stored as TEXT that are really numbers ------------
     # grade_repetition_count (20 distinct), no_of_siblings_in_school (67),
     # social_studies_exam_score (202) all arrive as object dtype. Left as
     # text they are label-encoded alphabetically, so "10" sorts before "2".
     for col in NUMERIC_COERCE_COLS:
-        if col in train.columns:
+        if col in train.columns and col not in COUNT_COLS:
             for d in (train, val):
                 d[col] = to_numeric_freetext(d[col])
 
@@ -139,6 +169,14 @@ def preprocess_inside_fold(df_train, df_val, target_col=TARGET, verbose=False):
                 # only rescale if the column really is on a doubled scale
                 d[col] = np.where(s_ > hi, s_ / 2.0, s_)
             meta.setdefault("rescaled", []).append(col)
+        elif spec["action"] == "invalidate":
+            lo, hi = spec["valid_range"]
+            for d in (train, val):
+                s_ = pd.to_numeric(d[col], errors="coerce")
+                bad = s_.notna() & ((s_ < lo) | (s_ > hi))
+                d[col + "_invalid"] = bad.astype(int)
+                d[col] = s_.where(~bad, np.nan)
+            meta.setdefault("invalidated", []).append(col)
         elif spec["action"] == "keep":
             meta.setdefault("suspect_kept", []).append(col)
         # "exclude" is handled by drop_reason() at step 1
@@ -159,6 +197,15 @@ def preprocess_inside_fold(df_train, df_val, target_col=TARGET, verbose=False):
     for col in list(train.columns):
         if col == target_col:
             continue
+        # A column with a declared ordinal map is handled EXPLICITLY at step 7.
+        # Letting this generic step convert it to 1/0 first means the ordinal
+        # map then runs {"No": 0, "Yes": 1} against numbers, matches nothing,
+        # and turns the whole column into NaN, which step 8 then deletes.
+        # That silently destroyed leap_beneficiary_status, govt_support and
+        # missed_school_for_choreswork — and with leap gone, the socioeconomic
+        # composite was never built.
+        if col in ORDINAL_MAPS:
+            continue
         if is_text(train[col]):
             vals = set(train[col].dropna().astype(str).str.strip().str.lower().unique())
             if vals and vals <= {"yes", "no", "true", "false", "1", "0"}:
@@ -169,11 +216,31 @@ def preprocess_inside_fold(df_train, df_val, target_col=TARGET, verbose=False):
     # --- 7. explicit ordinal maps + non-response indicator ------------
     for col, mapping in ORDINAL_MAPS.items():
         if col in train.columns:
+            before = int(train[col].notna().sum())
             for d in (train, val):
                 mapped = d[col].map(mapping)
                 d[col + "_missing"] = mapped.isna().astype(int)
                 d[col] = mapped
+            after = int(train[col].notna().sum())
+            # A variable must never disappear silently. If a map wipes out a
+            # column that had real values, something upstream changed its form.
+            if before > 0 and after == 0:
+                raise ValueError(
+                    f"ORDINAL_MAPS['{col}'] matched none of its {before} values. "
+                    f"The column was converted to another form before step 7 "
+                    f"(numbers, or different labels). Check config.py."
+                )
+            if before and after < 0.5 * before:
+                import warnings
+                warnings.warn(f"ORDINAL_MAPS['{col}'] kept only {after}/{before} "
+                              f"values; the rest became missing. Check config.py.")
             meta.setdefault("ordinal_applied", []).append(col)
+
+    # --- 7a. what a blank extracurricular answer means ----------------
+    ec = BEHAVIOR_COLS["extracurricular"]
+    if ec in train.columns and EXTRACURRICULAR_BLANK_MEANS == "none":
+        for d in (train, val):
+            d[ec] = d[ec].fillna(0)      # flag from step 7 is kept
 
     # --- 7b. non-response indicators for substantially missing columns --
     # extracurricular_activities is 24.9% missing AND is an ingredient of
@@ -233,8 +300,8 @@ def preprocess_inside_fold(df_train, df_val, target_col=TARGET, verbose=False):
     meta["nominal_label_encoded"] = cat
 
     # --- 11. composites, with every constant explicit -----------------
-    att = [c for c in ATTENDANCE_COLS if c in X_train.columns]
-    if len(att) == 3:
+    att = [c for c in ATTENDANCE_COMPOSITE_COLS if c in X_train.columns]
+    if len(att) == len(ATTENDANCE_COMPOSITE_COLS):
         for d in (X_train, X_val):
             frac = d[att].to_numpy(dtype=float) / ATTENDANCE_MAX
             d["attendance_risk_index"] = np.average(
@@ -274,6 +341,20 @@ def preprocess_inside_fold(df_train, df_val, target_col=TARGET, verbose=False):
     # --- 13. align val to train exactly, column order included --------
     X_val = X_val.reindex(columns=X_train.columns)
     X_val = X_val.fillna(X_train.median(numeric_only=True))
+
+    # Every predictor must have a known source. A column in neither list
+    # would enter the records-only model without anyone deciding it should.
+    if FEATURE_SET == "records":
+        known = set(RECORDS_COLS) | set(COMPOSITES)
+        stray = [c for c in X_train.columns
+                 if c not in known
+                 and not any(c == k + sfx for k in known
+                             for sfx in ("_missing", "_invalid"))]
+        if stray:
+            import warnings
+            warnings.warn(f"predictors with no declared source: {stray}. Add "
+                          f"them to RECORDS_COLS or QUESTIONNAIRE_COLS in config.py.")
+        meta["unclassified_predictors"] = stray
 
     meta["n_features"] = X_train.shape[1]
     meta["feature_names"] = list(X_train.columns)

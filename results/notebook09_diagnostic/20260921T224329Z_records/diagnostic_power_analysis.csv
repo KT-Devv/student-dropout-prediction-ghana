@@ -1,0 +1,2 @@
+n_paired_folds,n_seeds,alpha,target_power,pooled_sd,mde,observed_abs_diff,underpowered,ratio_mde_to_observed
+25,10,0.05,0.8,0.02782530462184994,0.01559099242361305,0.0033181640386821714,True,4.6986804274465905

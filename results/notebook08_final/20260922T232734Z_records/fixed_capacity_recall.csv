@@ -1,0 +1,5 @@
+reviewed_per_100,arm,recall_at_capacity
+5,G_all_focal_noW,0.58021978021978
+10,G_all_focal_noW,0.9632307692307693
+15,G_all_focal_noW,0.9814505494505494
+20,G_all_focal_noW,0.9852087912087911

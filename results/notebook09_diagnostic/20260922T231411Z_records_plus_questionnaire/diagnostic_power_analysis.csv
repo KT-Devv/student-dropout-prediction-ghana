@@ -1,0 +1,2 @@
+design,n_paired_folds_per_seed,n_seeds,alpha,target_power,sd_of_paired_differences,mde_paired,mde_unpaired_WRONG,observed_abs_diff,underpowered
+"paired (same folds, both arms)",25,10,0.05,0.8,0.0069892441092980154,0.003916192596478492,0.012679472088100375,0.0022195721362862205,True

@@ -1,0 +1,10 @@
+,features,loss,reweight,legacy,label
+A_raw_ce_noW,raw,ce,False,False,"Baseline LightGBM (raw, cross-entropy)"
+B_raw_ce_W,raw,ce,True,False,Baseline + class weighting
+C_raw_focal_noW,raw,focal,False,False,Focal loss on raw features  [the cell R01 never ran]
+D_raw_focal_W,raw,focal,True,False,Focal loss on raw features + weighting
+E_all_ce_noW,all,ce,False,False,"Composites, cross-entropy   [matched reference]"
+F_all_ce_W,all,ce,True,False,"Composites, cross-entropy + weighting"
+G_all_focal_noW,all,focal,False,False,"E-LightGBM (composites, focal loss)"
+H_all_focal_W,all,focal,True,False,E-LightGBM + weighting
+LEGACY_A,raw,ce,False,True,R01 baseline as published (is_unbalance=True)

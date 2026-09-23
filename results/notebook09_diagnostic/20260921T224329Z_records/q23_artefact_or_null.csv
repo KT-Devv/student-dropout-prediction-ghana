@@ -1,0 +1,9 @@
+id,condition,verdict,evidence
+(a),Seed count and sign stability,PASS,"10 seeds, same pipeline as the headline; 10/10 favour the reference; between-seed SD 0.00059 vs effect 0.00332"
+(b),Tuning parity across arms,PASS,"zero search trials each, identical config.SHARED_PARAMS; full search history disclosed in Notebook 6"
+(c),Baseline identity,PASS,E_all_ce_noW and G_all_focal_noW take the identical feature matrix and the identical weighting mechanism and differ only in the objective argument. R01 FAILED this: 38 vs 41 columns and is_unbalance on one side only
+(d),Model capacity against n,PASS,"predicted-probability SD: focal 0.2626, cross-entropy 0.2714, base rate 0.088. The model expresses variation, so playbook causes 3 and 5 stay ruled out on evidence"
+(e),Metric sensitivity to the claimed decision,FAIL,"reference arm at 0.9809 AUC-PR. Above ~0.95 there is essentially no headroom for an intervention to move, so a null cannot distinguish 'no effect' from 'no room for an effect'"
+(f),Base rate against reported accuracy,PASS,"base rate 8.8%, majority-class accuracy 91.2%, achieved recall 0.909. Not a majority-class artefact"
+(g),Effective n after splitting against raw n,FAIL,"n=981 raw but only 86 positive cases, across 4 school clusters, the largest holding 49% of the sample"
+(h),Analysis unit against hypothesis unit,PASS,"the mechanism is per-instance and instance-level evidence is now reported (Notebook 6b, instance_level_difficulty.csv). R01 FAILED this: every reported number was fold-averaged"

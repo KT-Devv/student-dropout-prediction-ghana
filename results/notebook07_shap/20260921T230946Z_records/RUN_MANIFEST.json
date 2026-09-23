@@ -1,0 +1,65 @@
+{
+  "run_dir": "results/notebook07_shap/20260921T230946Z_records",
+  "generated_utc": "2026-09-21T23:09:53Z",
+  "git": {
+    "commit": "",
+    "branch": "",
+    "dirty": false,
+    "dirty_paths": [],
+    "no_git": true,
+    "freeze_tag": ""
+  },
+  "host": "703fedbab664",
+  "platform": "Linux-6.6.122+-x86_64-with-glibc2.39",
+  "python": "3.13.15",
+  "protocol": {
+    "split_seed": 42,
+    "test_size": 0.2,
+    "seeds": [
+      42,
+      123,
+      456,
+      789,
+      1024,
+      2048,
+      3333,
+      5555,
+      7777,
+      9999
+    ],
+    "n_splits": 5,
+    "n_repeats": 5,
+    "primary_metric": "auc_pr",
+    "shared_params": {
+      "n_estimators": 300,
+      "num_leaves": 31,
+      "learning_rate": 0.05,
+      "subsample": 0.8,
+      "colsample_bytree": 0.8,
+      "verbosity": -1
+    },
+    "gamma_reported": 2.0,
+    "alpha_reported": 0.75,
+    "school_handling": "drop",
+    "feature_set": "records",
+    "active_composites": [
+      "attendance_risk_index"
+    ],
+    "fairness_threshold": 0.1,
+    "drop_derived_duplicates": true,
+    "suspect_column_actions": {
+      "social_studies_exam_score": "keep"
+    }
+  },
+  "notebook": "07_shap",
+  "test_set_scored": false,
+  "explained_on": "CV-held-out fold of the training pool",
+  "n_instances_explained": 157,
+  "n_positive_explained": 14,
+  "arms_explained": [
+    "G_all_focal_noW",
+    "E_all_ce_noW",
+    "LEGACY_A"
+  ],
+  "signed_values_retained": true
+}

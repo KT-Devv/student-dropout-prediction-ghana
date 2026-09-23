@@ -1,0 +1,4 @@
+row,symptom,cause
+8,"Mechanism is specific, effect washes out at your level",cause 12
+12,Not significant; cannot separate no-effect from not-enough-data,"cause 17 (confirmed, downstream)"
+14,"Metric at ceiling, nothing to move",cause 14

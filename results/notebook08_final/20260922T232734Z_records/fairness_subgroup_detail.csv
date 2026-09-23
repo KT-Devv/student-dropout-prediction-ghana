@@ -1,0 +1,9 @@
+subgroup_variable,group,n,n_positive,n_negative,tpr,fpr
+gender,Female,79,7,72,1.0,0.0
+gender,Male,78,7,71,1.0,0.014084507042253521
+geographic_zone,Peri-urban,72,5,67,1.0,0.014925373134328358
+geographic_zone,Rural,85,9,76,1.0,0.0
+school_code,KNU_JHS,54,2,52,1.0,0.019230769230769232
+school_code,WEWE,73,8,65,1.0,0.0
+school_code,SHI,18,3,15,1.0,0.0
+school_code,AYED_RC,12,1,11,1.0,0.0

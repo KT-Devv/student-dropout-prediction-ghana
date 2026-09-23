@@ -104,14 +104,28 @@ SCHOOL_HANDLING = "drop"
 SCORE_TEST = False
 FREEZE_CONFIRMED = False
 
+# Without git there is no commit hash to anchor the freeze to, so record the
+# freeze manually. Set this to a fixed, dated string at the moment you freeze
+# the configuration -- e.g. "R02-freeze-2026-09-25-1430" -- and do not edit
+# it afterwards. It goes in the run manifest and in M21. The point of the
+# freeze is that it happened BEFORE the test set was scored and is on the
+# record; a hash is the neatest way to prove that, a dated tag you never
+# revise is the honest alternative.
+FREEZE_TAG = "R02-freeze-2026-09-22-1500"
+
 # =====================================================================
 # KNOWN FACTS ABOUT THIS DATASET — assert these, don't assume them
 # =====================================================================
 EXPECTED = {
-    "n_rows": 1000,
+    # Observed in the Notebook 1 run. The R01 manuscript reports n = 1000
+    # and 92 dropout cases; 19 rows are exact duplicates (including
+    # study_id), so the true figures are 981 pupils and 86 dropouts (8.8%).
+    "n_rows_raw": 1000,
+    "n_duplicate_rows": 19,
+    "n_rows": 981,
     "n_raw_columns": 48,
-    "n_cleaned_columns": 41,        # including the target
-    "n_positive": 92,               # 9.2% base rate
+    "n_cleaned_columns": 42,        # including the target
+    "n_positive": 86,               # 8.8% base rate
     "n_schools": 4,
     "academic_year": "2024/25",     # the workbook says 2024/25; M18 says
                                     # 2025/2026. One of them is wrong — fix
@@ -146,7 +160,33 @@ COMPOSITES = [
 ]
 
 ATTENDANCE_MAX = 100.0
-ATTENDANCE_WEIGHTS = np.array([0.25, 0.30, 0.45])   # term 1, 2, 3
+
+# ---------------------------------------------------------------------
+# TERM 3 ATTENDANCE IS EXCLUDED — temporal leakage (group decision, R02)
+# ---------------------------------------------------------------------
+# Notebook 1 Section 3c: all 48 pupils with 0% term-3 attendance are
+# dropouts (100%), and pupils with 80%+ term-3 attendance drop out at 0.3%.
+# Those 48 had already left before term 3 began, so term-3 attendance
+# RECORDS the outcome rather than predicting it. An early-warning system has
+# to predict before the pupil leaves, so the model uses terms 1 and 2 only.
+#
+# R01 weighted term 3 at 0.45 in attendance_risk_index — the largest weight,
+# on the column most contaminated by the outcome.
+ATTENDANCE_COMPOSITE_COLS = ["term_1_attendance", "term_2_attendance"]
+ATTENDANCE_WEIGHTS = np.array([0.40, 0.60])       # term 1, term 2
+# The more recent term weighs more: a late decline signals departure more
+# strongly than an early dip that later recovers.
+
+# R01's definition, kept ONLY so Notebook 3 can reproduce the old composite
+# for the before/after comparison in M6. Never used for modelling.
+R01_ATTENDANCE_COLS = ["term_1_attendance", "term_2_attendance", "term_3_attendance"]
+R01_ATTENDANCE_WEIGHTS = np.array([0.25, 0.30, 0.45])
+
+TEMPORAL_LEAKAGE = {
+    "term_3_attendance": "recorded after dropout: all 48 pupils at 0% are "
+                         "dropouts; excluded so the model predicts from "
+                         "terms 1-2 only",
+}
 
 EXAM_SCORE_COLS = ["english_exam_score", "math_exam_score",
                    "science_exam_score", "social_studies_exam_score"]
@@ -164,6 +204,64 @@ NUMERIC_COERCE_COLS = [
     "no_of_siblings_in_school",    # object, 67 distinct — a count
     "social_studies_exam_score",   # object, 202 distinct — see SUSPECT below
 ]
+
+# ---------------------------------------------------------------------
+# WHERE EACH VARIABLE CAME FROM — differential measurement (group decision)
+# ---------------------------------------------------------------------
+# Pupils who STAYED answered the questionnaire themselves. Pupils who DROPPED
+# OUT were not at school, so their questionnaire was answered by the friends
+# they used to come to school with, and their records came from the
+# headmaster. The informant for a dropout knew the pupil had left.
+#
+# Questionnaire variables were therefore measured differently for the two
+# groups, and WHICH way depended on the outcome. A model can learn "was this
+# answered by a friend?" rather than anything about risk. The evidence was in
+# Notebook 2: "Low" income carries 59% dropout against 2% for "Medium", and
+# not one dropout's record says "Don't know" — a friend guessing gives an
+# answer; a pupil who does not know says so.
+#
+# School-record variables came from the same source for every pupil and are
+# comparable. The primary model uses those only.
+
+RECORDS_COLS = [
+    "term_1_attendance", "term_2_attendance",
+    "english_exam_score", "math_exam_score", "science_exam_score",
+    "social_studies_exam_score", "average_exam_score",
+    "grade_repetition_count", "class_level",
+    "gender", "age_at_start_of_academic_year",
+    "school_code", "school_type", "geographic_zone",
+]
+
+QUESTIONNAIRE_COLS = [
+    "family_income_level", "leap_beneficiary_status", "school_feeding_status",
+    "govt_support", "parent_guardian_education_level",
+    "parent_guardian_occupation", "home_has_electricity", "own_textbooks",
+    "no_of_siblings_in_school", "travel_time_to_school",
+    "mode_of_transport_to_school", "daily_study_hours_at_home",
+    "parent_attends_school_events", "safety_at_home", "safety_at_school",
+    "teacher_support_rating", "school_enjoyment", "class_participation",
+    "missed_school_for_choreswork", "missed_school_due_to_illness",
+    "barriers_to_regular_attendance",
+    # confirmed by the group as questionnaire items:
+    "behaviour_warnings_punishments", "extracurricular_activities",
+]
+
+# "records"                    -> PRIMARY analysis. School records only.
+# "records_plus_questionnaire" -> SECONDARY analysis. Adds the questionnaire
+#                                 items. Report the performance jump as an
+#                                 estimate of how much differential
+#                                 measurement inflated the results.
+# Changing this and re-running writes to separately named result folders.
+FEATURE_SET = "records"
+
+COMPOSITE_SOURCES = {
+    "attendance_risk_index": "records",
+    "socioeconomic_vulnerability_score": "questionnaire",   # income, LEAP, feeding
+    "behavioral_engagement_index": "questionnaire",         # warnings, participation, extracurricular
+}
+ACTIVE_COMPOSITES = [c for c, src in COMPOSITE_SOURCES.items()
+                     if FEATURE_SET != "records" or src == "records"]
+
 
 # ---------------------------------------------------------------------
 # COLUMNS THAT MUST NOT BE PREDICTORS
@@ -220,13 +318,28 @@ DERIVED_DUPLICATES = {
 # concatenated on data entry. Until somebody checks the instrument it is not
 # a usable predictor. Notebook 1 reports it; this setting decides what
 # happens to it:
-#   "exclude" — drop it and say why (recommended until verified)
-#   "rescale" — divide by 2, ONLY if the group confirms it is out of 200
-#   "keep"    — keep as-is, only if the range turns out to be legitimate
+#   "exclude"    — drop it and say why (recommended until verified)
+#   "invalidate" — keep it, but set values outside valid_range to NaN,
+#                  flag them, and re-impute in-fold. Right if MOST values
+#                  are on 0-100 and a minority are entry errors.
+#   "rescale"    — divide values >100 by 2. Right ONLY if some schools
+#                  marked it out of 200 — Notebook 1 Section 3c checks this
+#                  by school. Do not pick it without that evidence.
+#   "keep"       — keep as-is, only if the range turns out to be legitimate
+#
+# From the audit: the most common values (68, 43, 89, 63, 72 ...) sit on
+# 0-100, so it is NOT simply marked out of 200. Run Section 3c to see how
+# many values exceed 100 and whether they cluster in one school.
 SUSPECT_COLUMNS = {
     "social_studies_exam_score": {
-        "issue": "values up to 201 on a 0-100 scale; stored as text; 202 distinct",
-        "action": "exclude",
+        # RESOLVED by Notebook 1 Section 3c: every value lies between 0 and
+        # 97; none exceed 100. The "max 201" in the R01 describe() was not a
+        # score. The column is stored as TEXT, so R01 label-encoded it
+        # alphabetically into codes 0-201 ("100" < "43" < "68"). The model
+        # was fed social studies scores sorted like words. Coerced to
+        # numbers in-fold (NUMERIC_COERCE_COLS), it is a normal predictor.
+        "issue": "stored as text; R01 label-encoded it alphabetically",
+        "action": "keep",
         "valid_range": (0.0, 100.0),
     },
 }
@@ -241,11 +354,11 @@ SUSPECT_COLUMNS = {
 # quarter of that composite was fabricated. Here non-response stays NaN,
 # carries its own indicator, and is imputed in-fold from the training median.
 HIGH_MISSINGNESS = {
-    "extracurricular_activities": 0.249,
-    "daily_study_hours_at_home":  0.032,
-    "no_of_siblings_in_school":   0.009,
-    "class_participation":        0.002,
-    "term_2_attendance":          0.001,
+    "extracurricular_activities": 0.249,   # 244 of 981
+    "daily_study_hours_at_home":  0.032,   # 31
+    "no_of_siblings_in_school":   0.009,   # 9 blank, plus corrupted values
+    "class_participation":        0.002,   # 2
+    "term_2_attendance":          0.001,   # 1
 }
 MISSINGNESS_INDICATOR_THRESHOLD = 0.05   # add a _missing flag above this rate
 
@@ -261,8 +374,13 @@ def drop_reason(col: str) -> str | None:
     c = str(col).strip().lower()
     if c in LEAKAGE_EXACT:
         return "leakage"
+    if c in TEMPORAL_LEAKAGE:
+        return f"temporal leakage ({TEMPORAL_LEAKAGE[c]})"
     if c in DROP_EXACT:
         return "identifier / provenance metadata (exact name)"
+    if FEATURE_SET == "records" and c in QUESTIONNAIRE_COLS:
+        return ("differential measurement (questionnaire answered by friends "
+                "for dropouts; secondary analysis only)")
     if DROP_DERIVED_DUPLICATES and c in DERIVED_DUPLICATES:
         return f"derived duplicate ({DERIVED_DUPLICATES[c]})"
     if c in SUSPECT_COLUMNS and SUSPECT_COLUMNS[c]["action"] == "exclude":
@@ -295,65 +413,104 @@ def is_text(series) -> bool:
 # min" < "More than 2 hrs", which is meaningless as a number.
 #
 # Keys are lowercase and stripped; values are the canonical label.
+# Tokens that mean "no answer" in ANY text column. Mapped to NaN before any
+# other step, so they are imputed from training data and flagged — never
+# silently treated as a real category or a real midpoint.
+NA_TOKENS = {
+    "", "nan", "none", "na", "n/a", "nil", "not collected",
+    "don't know", "dont know", "do not know", "unknown", "dk",
+}
+
+# Observed spelling / formatting variants, from the Notebook 1 audit of the
+# actual workbook. Keys are lowercase and stripped; values are canonical.
+# None means "treat as missing".
 CATEGORY_CANONICAL = {
     "family_income_level": {
-        "low": "Low", "medium": "Medium", "med": "Medium",
-        "high": "High", "hgh": "High",           # the observed misspelling
-        "don't know": "Unknown", "dont know": "Unknown",
-        "do not know": "Unknown", "unknown": "Unknown", "dk": "Unknown",
+        "low": "Low", "medium": "Medium", "high": "High",
+        "hgh": "High",                                   # 3 records
     },
+    "travel_time_to_school": {
+        "less than 15 min": "Less than 15 min",
+        "less than 15 minutes": "Less than 15 min",      # 2 records
+        "15-30 min": "15-30 min",
+        "30-60 min": "30-60 min",
+        "more than 1 hour": "More than 1 hour",
+    },
+    "parent_guardian_education_level": {
+        "no formal education": "No formal education", "primary": "Primary",
+        "jhs": "JHS", "shs": "SHS", "tertiary": "Tertiary",
+    },
+    "own_textbooks": {
+        "no textbooks": "No textbooks",
+        "no-borrow/share": "No-borrow/share",
+        "yes-some subjects": "Yes-some subjects",
+        "yes , for some": "Yes-some subjects",           # 11 records
+        "yes, for some": "Yes-some subjects",            # 4 records
+        "yes-all subjects": "Yes-all subjects",
+        "yes , for all subjects": "Yes-all subjects",    # 14 records
+    },
+    "missed_school_for_choreswork": {
+        "yes": "Yes", "yyes": "Yes",                     # 1 record "yYes"
+        "no": "No",
+    },
+    "missed_school_due_to_illness": {
+        "no": "No",
+        "yes, once": "Yes, once", "yes-once": "Yes, once",              # 105
+        "yes, more than once": "Yes, more than once",
+        "yes-more than once": "Yes, more than once",                    # 82
+        "y": None,     # 1 record: "yes" but frequency unknown -> missing
+    },
+    "parent_attends_school_events": {
+        "never": "Never", "rarely": "Rarely", "sometimes": "Sometimes",
+        "often": "Often", "always": "Always",
+        "alwaya": "Always",                              # 1 record
+    },
+    "behaviour_warnings_punishments": {
+        "never": "Never", "once": "Once",
+        "2-3 times": "2-3 times", "more than 3 times": "More than 3 times",
+    },
+    "extracurricular_activities": {
+        "1 activity": "1 activity", "2 activities": "2 activities",
+        "3 activities": "3 activities", "4 or more": "4 or more",
+    },
+    "leap_beneficiary_status": {"yes": "Yes", "no": "No"},
+    "govt_support": {"yes": "Yes", "no": "No"},
 }
 
 # ---------------------------------------------------------------------
-# ORDINAL MAPS  —  *** VERIFY BEFORE YOUR FIRST REAL RUN ***
+# ORDINAL MAPS — built from the ACTUAL values in your workbook
 # ---------------------------------------------------------------------
-# Your notebook outputs gave me the DISTINCT COUNT of every categorical but
-# not the full value list. Where the count below exceeds the entries in a
-# map, values are missing: they become NaN and get an indicator flag.
-# audit_categories() in Notebook 1 prints exactly which ones.
-#
-# column                            distinct   entries   status
-# family_income_level                     5      3+Unk   OK
-# travel_time_to_school                   6          6   VERIFY LABELS
-# parent_guardian_education_level         6          6   VERIFY LABELS
-# daily_study_hours_at_home               3          3   VERIFY LABELS
-# own_textbooks                           7          4   INCOMPLETE
-# behaviour_warnings_punishments          4          4   VERIFY LABELS
-# extracurricular_activities              4          4   VERIFY LABELS
-# parent_attends_school_events            6          5   INCOMPLETE
-# missed_school_due_to_illness            8          3   INCOMPLETE
-# missed_school_for_choreswork            6          3   INCOMPLETE
-# class_level                             5          5   VERIFY LABELS
-# leap_beneficiary_status                 3          3   VERIFY LABELS
-# govt_support                            3          3   VERIFY LABELS
+# "Don't know" / "Unknown" / "Not collected" are NOT placed on any scale.
+# The R01 maps put "Don't know" at 1, between No=0 and Yes=2, which asserts
+# that not knowing whether you receive LEAP is halfway to receiving it.
+# Non-response becomes NaN, gets a <col>_missing indicator, and is imputed
+# from the training fold.
 ORDINAL_MAPS = {
     "family_income_level": {"Low": 0, "Medium": 1, "High": 2},
-    # "Unknown" deliberately absent -> NaN + family_income_level_missing.
-    # R01 Notebook 3 mapped "don't know" to 1 (Medium), silently imputing a
-    # value and hiding the non-response.
 
     "travel_time_to_school": {
-        "Less than 15 min": 0, "15-30 min": 1, "30-45 min": 2,
-        "45 min-1 hour": 3, "1-2 hrs": 4, "More than 2 hrs": 5,
+        "Less than 15 min": 0, "15-30 min": 1,
+        "30-60 min": 2, "More than 1 hour": 3,
     },
     "parent_guardian_education_level": {
-        "None": 0, "Primary": 1, "JHS": 2, "SHS": 3, "Tertiary": 4,
-        # a 6th value exists. If it is "Other" it is NOT ordinal — move the
-        # column to NOMINAL_COLS instead of forcing it onto this scale.
+        "No formal education": 0, "Primary": 1, "JHS": 2,
+        "SHS": 3, "Tertiary": 4,
     },
     "daily_study_hours_at_home": {
         "Less than 1 hr": 0, "1-2 hrs": 1, "More than 2 hrs": 2,
     },
     "own_textbooks": {
-        "No": 0, "Yes-some subjects": 1, "Yes-most subjects": 2,
-        "Yes-all subjects": 3,
+        "No textbooks": 0, "No-borrow/share": 1,
+        "Yes-some subjects": 2, "Yes-all subjects": 3,
     },
     "behaviour_warnings_punishments": {
-        "Never": 0, "Once": 1, "Twice": 2, "More than twice": 3,
+        "Never": 0, "Once": 1, "2-3 times": 2, "More than 3 times": 3,
     },
     "extracurricular_activities": {
-        "No activities": 0, "1 activity": 1, "2 activities": 2,
-        "3 or more activities": 3,
+        "1 activity": 1, "2 activities": 2,
+        "3 activities": 3, "4 or more": 4,
+        # NOTE: there is NO "none" / "0 activities" category in the data.
+        # See EXTRACURRICULAR_BLANK_MEANS below.
     },
     "parent_attends_school_events": {
         "Never": 0, "Rarely": 1, "Sometimes": 2, "Often": 3, "Always": 4,
@@ -361,28 +518,67 @@ ORDINAL_MAPS = {
     "missed_school_due_to_illness": {
         "No": 0, "Yes, once": 1, "Yes, more than once": 2,
     },
-    "missed_school_for_choreswork": {
-        "No": 0, "Yes, once": 1, "Yes, more than once": 2,
-    },
+    # binary in the data (Yes 542 / No 430), not three-level
+    "missed_school_for_choreswork": {"No": 0, "Yes": 1},
     "class_level": {"P4": 0, "P5": 1, "P6": 2, "JHS1": 3, "JHS2": 4},
-    "leap_beneficiary_status": {"No": 0, "Don't know": 1, "Yes": 2},
-    "govt_support": {"No": 0, "Don't know": 1, "Yes": 2},
+    # binary + non-response; non-response is NOT a midpoint
+    "leap_beneficiary_status": {"No": 0, "Yes": 1},
+    "govt_support": {"No": 0, "Yes": 1},
 }
 
-# Genuinely unordered — label encoding is the correct treatment for these.
+# ---------------------------------------------------------------------
+# What does a BLANK extracurricular_activities mean?
+# ---------------------------------------------------------------------
+# 244 of 981 records (24.9%) are blank, and the observed categories START
+# AT "1 activity" — there is no "none" option in the data at all.
+#
+# That changes the picture. Earlier I said R01's fillna(0) fabricated a
+# quarter of this composite. That was too confident: if the questionnaire
+# had no "none" tickbox, a blank most plausibly MEANS none, and R01's zero
+# may have been right.
+#
+# Check the paper questionnaire:
+#   "none"    — there was no "none" option; blank = no activities -> 0
+#   "unknown" — there WAS a "none" option; blank = non-response  -> NaN,
+#               imputed in-fold, with a missingness flag
+# Either way a missingness indicator is kept, so the model can learn what
+# a blank means. The choice matters most for behavioral_engagement_index,
+# where a blank enters as 0 or as the training median. Say which you chose
+# in M7, and why.
+EXTRACURRICULAR_BLANK_MEANS = "unknown"      # <-- CHECK THE QUESTIONNAIRE
+
+# Genuinely unordered — label encoding is the correct treatment.
 NOMINAL_COLS = [
     "school_code", "geographic_zone", "school_type", "gender",
     "mode_of_transport_to_school", "parent_guardian_occupation",
     "barriers_to_regular_attendance",
 ]
 
-# Free-text numeric answers appearing in count columns.
-STRING_TO_NUMERIC = {
-    "never": 0, "once": 1, "twice": 2, "none": 0, "no": 0, "nil": 0,
-    "no activities": 0, "1 activity": 1, "2 activities": 2,
-    "3 activities": 3, "more than twice": 3, "3 or more": 3,
-    "3 or more activities": 3,
+# ---------------------------------------------------------------------
+# COUNT COLUMNS — integers that arrived corrupted
+# ---------------------------------------------------------------------
+# grade_repetition_count: 132 of 981 values are FRACTIONAL (0.1, 0.2, 0.7,
+#   1.1, 2.3 ...). A pupil cannot repeat a grade 0.3 times. Plus one "4+".
+# no_of_siblings_in_school: dozens of fractional values (3.3, 2.7, 4.9 ...),
+#   impossible values (21, 23, 31, 43, 45, 55), "Not collected" (14) and
+#   "r" (2).
+#
+# Fractional counts are the fingerprint of MEAN IMPUTATION done upstream —
+# most likely in the spreadsheet, before the data ever reached a notebook,
+# and therefore on the full dataset including rows that later became test
+# data. That is leakage baked into the raw workbook. The fold-safe repair is
+# to discard those values and re-impute them from each training fold.
+#
+# Non-integer values and values above `max` become NaN, get a flag, and are
+# re-imputed in-fold. `max` is a stated assumption — adjust and document it.
+COUNT_COLS = {
+    "grade_repetition_count": {"max": 6, "strings": {"4+": 4}},
+    "no_of_siblings_in_school": {"max": 15, "strings": {}},
 }
+
+# Free-text numeric answers appearing in count columns.
+STRING_TO_NUMERIC = {"never": 0, "once": 1, "twice": 2, "none": 0, "no": 0,
+                     "nil": 0, "4+": 4}
 
 
 def audit_categories(df, verbose=True):
@@ -407,16 +603,27 @@ def audit_categories(df, verbose=True):
             if verbose:
                 print(f"\n{col}  [binary yes/no]  handled by the yes/no step")
             continue
-        vals = raw_vals
+        vals = raw_vals[~raw_vals.str.lower().isin(NA_TOKENS)]
+        n_na_tokens = int(len(raw_vals) - len(vals))
         canon = CATEGORY_CANONICAL.get(col)
         if canon:
-            vals = vals.str.lower().map(lambda v: canon.get(v, v))
+            # known variant -> canonical label; a None target means missing
+            def _c(v, canon=canon):
+                k = str(v).strip().lower()
+                return canon[k] if k in canon else v
+            vals = vals.map(_c).dropna()
         counts = vals.value_counts()
+        if col in COUNT_COLS or col in NUMERIC_COERCE_COLS:
+            if verbose:
+                print(f"\n{col}  [numeric count / coerced]  handled by the "
+                      f"count-column step, not an ordinal map")
+            continue
         omap = ORDINAL_MAPS.get(col)
         if verbose:
             kind = ("ORDINAL" if omap else
                     "nominal" if col in NOMINAL_COLS else "UNCLASSIFIED")
-            print(f"\n{col}  [{kind}]  {counts.size} distinct")
+            print(f"\n{col}  [{kind}]  {counts.size} distinct"
+                  + (f"  (+{n_na_tokens} non-response -> NaN)" if n_na_tokens else ""))
             for v, n in counts.items():
                 mark = ""
                 if omap is not None:
@@ -516,6 +723,11 @@ def git_info(ignore_outputs: bool = True) -> dict:
         except Exception:
             return ""
 
+    if not (REPO / ".git").exists():
+        # running from Google Drive, not a clone
+        return {"commit": "", "branch": "", "dirty": False, "dirty_paths": [],
+                "no_git": True, "freeze_tag": FREEZE_TAG}
+
     lines = [l for l in g("status", "--porcelain").splitlines() if l.strip()]
     if ignore_outputs:
         def is_output(line):
@@ -525,12 +737,15 @@ def git_info(ignore_outputs: bool = True) -> dict:
     return {"commit": g("rev-parse", "HEAD"),
             "branch": g("rev-parse", "--abbrev-ref", "HEAD"),
             "dirty": bool(lines),
-            "dirty_paths": [l[3:].strip() for l in lines][:20]}
+            "dirty_paths": [l[3:].strip() for l in lines][:20],
+            "no_git": False, "freeze_tag": FREEZE_TAG}
 
 
 def run_dir(tag: str) -> Path:
     run_id = time.strftime("%Y%m%dT%H%M%SZ", time.gmtime())
-    d = RESULTS / tag / run_id
+    # the feature set is in the folder name so primary and secondary results
+    # can never be mixed up
+    d = RESULTS / tag / f"{run_id}_{FEATURE_SET}"
     (d / "figures").mkdir(parents=True, exist_ok=True)
     return d
 
@@ -574,6 +789,8 @@ def write_manifest(out_dir: Path, extra: dict | None = None) -> dict:
             "primary_metric": PRIMARY_METRIC, "shared_params": SHARED_PARAMS,
             "gamma_reported": GAMMA_REPORTED, "alpha_reported": ALPHA_REPORTED,
             "school_handling": SCHOOL_HANDLING,
+            "feature_set": FEATURE_SET,
+            "active_composites": ACTIVE_COMPOSITES,
             "fairness_threshold": FAIRNESS_THRESHOLD,
             "drop_derived_duplicates": DROP_DERIVED_DUPLICATES,
             "suspect_column_actions": {k: v["action"]
@@ -591,6 +808,13 @@ def banner(title: str):
     print(title)
     print("=" * 72)
     print(f"repo            : {REPO}")
-    print(f"git             : {git_info()['commit'][:8] or 'no commit'}")
+    _g = git_info()
+    print(f"provenance      : "
+          + (f"git {_g['commit'][:8]}" if _g.get("commit")
+             else f"freeze tag {FREEZE_TAG!r}" if FREEZE_TAG
+             else "NONE — set FREEZE_TAG in config.py before scoring the test set"))
     print(f"school_handling : {SCHOOL_HANDLING}")
+    print(f"FEATURE SET     : {FEATURE_SET}"
+          + ("   (PRIMARY — school records only)" if FEATURE_SET == "records"
+             else "   (SECONDARY — includes friend-reported questionnaire items)"))
     print(f"primary metric  : {PRIMARY_METRIC}")
