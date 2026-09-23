@@ -1,0 +1,99 @@
+{
+  "run_dir": "results/notebook06b_focal/20260922T224212Z_records_plus_questionnaire",
+  "generated_utc": "2026-09-22T23:07:18Z",
+  "git": {
+    "commit": "",
+    "branch": "",
+    "dirty": false,
+    "dirty_paths": [],
+    "no_git": true,
+    "freeze_tag": ""
+  },
+  "host": "ce6e60298f7d",
+  "platform": "Linux-6.6.122+-x86_64-with-glibc2.39",
+  "python": "3.13.15",
+  "protocol": {
+    "split_seed": 42,
+    "test_size": 0.2,
+    "seeds": [
+      42,
+      123,
+      456,
+      789,
+      1024,
+      2048,
+      3333,
+      5555,
+      7777,
+      9999
+    ],
+    "n_splits": 5,
+    "n_repeats": 5,
+    "primary_metric": "auc_pr",
+    "shared_params": {
+      "n_estimators": 300,
+      "num_leaves": 31,
+      "learning_rate": 0.05,
+      "subsample": 0.8,
+      "colsample_bytree": 0.8,
+      "verbosity": -1
+    },
+    "gamma_reported": 2.0,
+    "alpha_reported": 0.75,
+    "school_handling": "drop",
+    "feature_set": "records_plus_questionnaire",
+    "active_composites": [
+      "attendance_risk_index",
+      "socioeconomic_vulnerability_score",
+      "behavioral_engagement_index"
+    ],
+    "fairness_threshold": 0.1,
+    "drop_derived_duplicates": true,
+    "suspect_column_actions": {
+      "social_studies_exam_score": "keep"
+    }
+  },
+  "notebook": "06b_focal",
+  "test_set_scored": false,
+  "seeds": [
+    42,
+    123,
+    456,
+    789,
+    1024,
+    2048,
+    3333,
+    5555,
+    7777,
+    9999
+  ],
+  "arms": [
+    "A_raw_ce_noW",
+    "B_raw_ce_W",
+    "C_raw_focal_noW",
+    "D_raw_focal_W",
+    "E_all_ce_noW",
+    "F_all_ce_W",
+    "G_all_focal_noW",
+    "H_all_focal_W",
+    "LEGACY_A"
+  ],
+  "headline": [
+    "E_all_ce_noW",
+    "G_all_focal_noW"
+  ],
+  "old_headline": [
+    "LEGACY_A",
+    "G_all_focal_noW"
+  ],
+  "is_unbalance_inert": true,
+  "n_features_per_fold": 47,
+  "gamma_alpha_cells": 12,
+  "headline_grand_mean_diff": -0.0022195721362862205,
+  "headline_between_seed_sd": 0.0012074739304179078,
+  "saved_models": {
+    "E_all_ce_noW": "arm_E_all_ce_noW.pkl",
+    "LEGACY_A": "arm_LEGACY_A.pkl",
+    "G_all_focal_noW": "arm_G_all_focal_noW.pkl"
+  }
+}

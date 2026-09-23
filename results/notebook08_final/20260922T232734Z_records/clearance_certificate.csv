@@ -1,0 +1,7 @@
+#,condition,verdict,evidence
+C1,"Sign stable across >=10 seeds, SD smaller than the effect",PASS,"10 seeds; 10 favour reference, 0 favour focal; grand mean -0.0033, between-seed SD 0.0006  [final_contrasts.csv]"
+C2,Survives leave-one-out (fold or cluster removed),PASS,leave-one-school-out over the school clusters [leave_one_school_out.csv]; leave-one-seed-out in Notebook 9. Single-source design still precludes dataset-level LOO.
+C3,"MDE < claimed effect, OR worded inconclusive",PASS,"route two: the result is worded inconclusive throughout, never as 'no effect'. R01 scored this FAIL against itself; it passes."
+C4,"Baseline received the same tuning budget, and it is stated",PASS,E_all_ce_noW and G_all_focal_noW take the identical feature matrix and the identical weighting mechanism; zero search trials each; full search history disclosed in Notebook 6 [search_disclosure_for_M13.csv]
+C5,Metric moves with the claimed decision; base rate printed,FAIL,threshold_to_caseload.csv and metric_to_construct_table.csv carry the metric through to a caseload; base rate 8.8% printed beside every figure. Confusion matrices identical across arms.
+C6,"Test set scored once, after freeze, committed",PASS,"run 20260922T232734Z_records, anchor R02-freeze-2026-09-22-1500, dirty=False. NOTE: for the R01 RESULT this fails permanently — that test partition was scored across six notebooks. State it in the limitations rather than attempting a reconstruction."

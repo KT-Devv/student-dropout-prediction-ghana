@@ -1,0 +1,8 @@
+family,total_abs_shap,mean_abs_shap,mean_signed,n_features,top_feature,share_pct,model_arm
+academic_performance,0.8830726383987225,0.11038407979984032,-0.00484540553726054,8,average_exam_score,28.7,G_all_focal_noW
+attendance_trajectory,0.7608856724618397,0.12681427874363996,0.017245347503150252,6,attendance_risk_index,24.7,G_all_focal_noW
+behavioural_engagement,0.6970126577506575,0.06970126577506575,-0.0023119330507411413,10,parent_attends_school_events,22.6,G_all_focal_noW
+household_economic,0.5041004035019638,0.029652964911880225,0.0012290374093787504,17,family_income_level,16.4,G_all_focal_noW
+safety_wellbeing,0.12190789226135235,0.06095394613067617,0.000470384851178687,2,safety_at_home,4.0,G_all_focal_noW
+demographic,0.06758953419058322,0.03379476709529161,0.00362940988421619,2,age_at_start_of_academic_year,2.2,G_all_focal_noW
+school_administrative,0.04506384654048372,0.02253192327024186,0.003794962105988176,2,school_type,1.5,G_all_focal_noW

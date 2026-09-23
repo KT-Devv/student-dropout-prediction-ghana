@@ -1,0 +1,4 @@
+subgroup_variable,equal_opportunity_diff,equalized_odds_diff,declared_threshold,within_threshold,n_groups,min_subgroup_positives
+gender,0.0,0.014084507042253521,0.1,True,2,7
+geographic_zone,0.0,0.014925373134328358,0.1,True,2,5
+school_code,0.0,0.019230769230769232,0.1,True,4,1

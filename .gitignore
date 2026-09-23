@@ -11,3 +11,8 @@ __pycache__/
 *.pyc
 .ipynb_checkpoints/
 catboost_info/
+
+
+
+**/test_false_negatives.csv
+**/*_snapshot.csv

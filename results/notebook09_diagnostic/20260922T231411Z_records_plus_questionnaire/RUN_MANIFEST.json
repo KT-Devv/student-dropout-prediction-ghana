@@ -1,0 +1,89 @@
+{
+  "run_dir": "results/notebook09_diagnostic/20260922T231411Z_records_plus_questionnaire",
+  "generated_utc": "2026-09-22T23:18:20Z",
+  "git": {
+    "commit": "",
+    "branch": "",
+    "dirty": false,
+    "dirty_paths": [],
+    "no_git": true,
+    "freeze_tag": ""
+  },
+  "host": "a6f8094d5573",
+  "platform": "Linux-6.6.122+-x86_64-with-glibc2.39",
+  "python": "3.13.15",
+  "protocol": {
+    "split_seed": 42,
+    "test_size": 0.2,
+    "seeds": [
+      42,
+      123,
+      456,
+      789,
+      1024,
+      2048,
+      3333,
+      5555,
+      7777,
+      9999
+    ],
+    "n_splits": 5,
+    "n_repeats": 5,
+    "primary_metric": "auc_pr",
+    "shared_params": {
+      "n_estimators": 300,
+      "num_leaves": 31,
+      "learning_rate": 0.05,
+      "subsample": 0.8,
+      "colsample_bytree": 0.8,
+      "verbosity": -1
+    },
+    "gamma_reported": 2.0,
+    "alpha_reported": 0.75,
+    "school_handling": "drop",
+    "feature_set": "records_plus_questionnaire",
+    "active_composites": [
+      "attendance_risk_index",
+      "socioeconomic_vulnerability_score",
+      "behavioral_engagement_index"
+    ],
+    "fairness_threshold": 0.1,
+    "drop_derived_duplicates": true,
+    "suspect_column_actions": {
+      "social_studies_exam_score": "keep"
+    }
+  },
+  "notebook": "09_diagnostic",
+  "test_set_scored": false,
+  "seeds": [
+    42,
+    123,
+    456,
+    789,
+    1024,
+    2048,
+    3333,
+    5555,
+    7777,
+    9999
+  ],
+  "arms": [
+    "E_all_ce_noW",
+    "G_all_focal_noW"
+  ],
+  "grand_mean_diff": -0.0022195721362862205,
+  "between_seed_sd": 0.0012074739304179078,
+  "mde": 0.003916192596478492,
+  "observed": 0.0022195721362862205,
+  "underpowered": true,
+  "q23_conditions_failed": 2,
+  "is_null": false,
+  "null_unestablished": false,
+  "seed_loo_flips": 0,
+  "committed_diagnostics": [
+    "diagnostic_10_seed_stability.csv",
+    "diagnostic_power_analysis.csv",
+    "diagnostic_leave_one_seed_out.csv",
+    "diagnostic_leave_one_school_out.csv"
+  ]
+}

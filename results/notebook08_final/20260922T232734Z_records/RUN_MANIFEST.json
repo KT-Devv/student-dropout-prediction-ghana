@@ -1,0 +1,70 @@
+{
+  "run_dir": "results/notebook08_final/20260922T232734Z_records",
+  "generated_utc": "2026-09-22T23:33:23Z",
+  "git": {
+    "commit": "",
+    "branch": "",
+    "dirty": false,
+    "dirty_paths": [],
+    "no_git": true,
+    "freeze_tag": "R02-freeze-2026-09-22-1500"
+  },
+  "host": "1acd2b7ccb5b",
+  "platform": "Linux-6.6.122+-x86_64-with-glibc2.39",
+  "python": "3.13.15",
+  "protocol": {
+    "split_seed": 42,
+    "test_size": 0.2,
+    "seeds": [
+      42,
+      123,
+      456,
+      789,
+      1024,
+      2048,
+      3333,
+      5555,
+      7777,
+      9999
+    ],
+    "n_splits": 5,
+    "n_repeats": 5,
+    "primary_metric": "auc_pr",
+    "shared_params": {
+      "n_estimators": 300,
+      "num_leaves": 31,
+      "learning_rate": 0.05,
+      "subsample": 0.8,
+      "colsample_bytree": 0.8,
+      "verbosity": -1
+    },
+    "gamma_reported": 2.0,
+    "alpha_reported": 0.75,
+    "school_handling": "drop",
+    "feature_set": "records",
+    "active_composites": [
+      "attendance_risk_index"
+    ],
+    "fairness_threshold": 0.1,
+    "drop_derived_duplicates": true,
+    "suspect_column_actions": {
+      "social_studies_exam_score": "keep"
+    }
+  },
+  "notebook": "08_final",
+  "test_scored": true,
+  "clearance_score": "5/6",
+  "fairness_threshold_declared": 0.1,
+  "headline_contrast": "MATCHED (1 change: objective only)",
+  "headline_grand_mean_diff": -0.0033181640386821714,
+  "headline_between_seed_sd": 0.0005916207457024462,
+  "test_scoring_events": [
+    {
+      "utc": "2026-09-22T23:33:23.739662+00:00",
+      "freeze_anchor": "R02-freeze-2026-09-22-1500",
+      "anchor_type": "freeze_tag",
+      "dirty": false,
+      "n_arms": 9
+    }
+  ]
+}

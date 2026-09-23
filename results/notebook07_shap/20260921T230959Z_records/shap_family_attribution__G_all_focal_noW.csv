@@ -1,0 +1,5 @@
+family,total_abs_shap,mean_abs_shap,mean_signed,n_features,top_feature,share_pct,model_arm
+academic_performance,1.3617149053491437,0.17021436316864297,-0.0054253514877719115,8,average_exam_score,47.3,G_all_focal_noW
+attendance_trajectory,1.0651452544525082,0.35504841815083604,0.04282476417899126,3,attendance_risk_index,37.0,G_all_focal_noW
+demographic,0.2268722352909515,0.11343611764547575,0.0014176189820017636,2,age_at_start_of_academic_year,7.9,G_all_focal_noW
+school_administrative,0.22638489018282565,0.11319244509141282,0.011567527099763877,2,geographic_zone,7.9,G_all_focal_noW
