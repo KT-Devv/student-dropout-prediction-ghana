@@ -10,7 +10,7 @@ data-processed/*_focal.csv
 data-processed/*ctgan*.csv
 
 # Archive contains archived splits and artifacts from earlier analyses; do not keep in history
-archive/
+/archive/
 
 __pycache__/
 *.pyc
@@ -29,9 +29,9 @@ env/
 # ---- pupil-level data: NEVER committed (ethics HuSSREC/AP/543/VOL. 5) ----
 data-raw/
 data-processed/
-archive/
-models/
-figures/
+/archive/
+/models/
+/figures/
 *.xlsx
 *.pkl
 **/grid_fold_predictions.csv
