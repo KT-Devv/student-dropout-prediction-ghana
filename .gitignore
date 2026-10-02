@@ -25,3 +25,26 @@ catboost_info/
 env/
 *.egg-info
 .DS_Store
+
+# ---- pupil-level data: NEVER committed (ethics HuSSREC/AP/543/VOL. 5) ----
+data-raw/
+data-processed/
+archive/
+models/
+figures/
+*.xlsx
+*.pkl
+**/grid_fold_predictions.csv
+**/instance_level_pairs.csv
+**/test_false_negatives.csv
+**/*_snapshot.csv
+
+# the de-identified false-negative file IS committed; R8 cites it
+!**/test_false_negatives_deidentified.csv
+
+# results/ is committed in full — the diagnostic files back the reported tables
+
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+catboost_info/
