@@ -1,0 +1,24 @@
+{
+  "CatBoost": {
+    "depth": 9,
+    "iterations": 354,
+    "l2_leaf_reg": 1.076769072877382,
+    "learning_rate": 0.011474276591948267
+  },
+  "LightGBM": {
+    "colsample_bytree": 0.6362425738131283,
+    "learning_rate": 0.0628859838813868,
+    "max_depth": 14,
+    "min_child_samples": 7,
+    "n_estimators": 584,
+    "num_leaves": 58,
+    "subsample": 0.8721230154351118
+  },
+  "RandomForest": {
+    "max_depth": 25,
+    "max_features": "sqrt",
+    "min_samples_leaf": 3,
+    "min_samples_split": 6,
+    "n_estimators": 406
+  }
+}

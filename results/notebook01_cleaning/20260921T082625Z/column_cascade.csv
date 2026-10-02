@@ -1,0 +1,9 @@
+step,criterion,n_dropped,n_remaining,columns
+0. raw workbook,-,0.0,48.0,
+1. target leakage,derived from or dated by the outcome,1.0,47.0,headteacher_confirmation_date
+2. identifier / provenance,exact name or whole underscore token,4.0,43.0,study_id; data_source; enumerator_initials; date_recorded
+3. derived duplicate,arithmetically recoverable from retained columns,1.0,42.0,average_attendance
+4. failed range validation,values outside the declared scale,1.0,41.0,social_studies_exam_score
+5. entirely empty,100% missing,1.0,40.0,notes__comments
+6. near-unique text,">98% distinct values, text only",0.0,40.0,
+7. constant / near-constant,pruned IN-FOLD on training statistics,,,fold-dependent — see pipeline.preprocess_inside_fold

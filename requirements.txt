@@ -1,25 +1,21 @@
-# Pinned to the environment that produced the reported results.
+# Pinned to the environment that produced every reported figure.
+# Source: results/notebook08_final/20260922T232734Z_records/pip_freeze.txt
+# Python 3.13.15
 #
-# IMPORTANT: replace these pins with the actual output of
-#   results/notebook08_final/<RUN_ID>/pip_freeze.txt
-# after your locked run, and reconcile environment.yml against the same file.
-# GATE-3 failed because M19's version table disagreed with both
-# requirements.txt and environment.yml on every single entry. All three files
-# and the manuscript must state the same versions.
+# environment.yml pins the same versions. M19's Table M6 is pasted from
+# environment_versions.csv in the same run directory. All four must agree;
+# in R02 they did not, which is why GATE-3 failed.
 
-numpy>=1.26,<3
-pandas>=2.1,<3
-scipy>=1.11
-scikit-learn>=1.4
-lightgbm>=4.3
-xgboost>=2.0
-catboost>=1.2
-shap>=0.44
-imbalanced-learn>=0.12
-ctgan>=0.10
-matplotlib>=3.7
-seaborn>=0.13
-joblib>=1.3
-openpyxl>=3.1
-jupyter
-nbconvert
+numpy==2.1.3
+pandas==2.2.3
+scipy==1.16.3
+scikit-learn==1.6.1
+lightgbm==4.6.0
+xgboost==3.4.1
+catboost==1.2.10
+shap==0.52.0
+imbalanced-learn==0.14.2
+matplotlib==3.10.0
+seaborn==0.13.2
+joblib==1.5.2
+openpyxl==3.1.5

@@ -1,0 +1,8 @@
+contrast,ref_arm,test_arm,grand_mean_diff,between_seed_sd,ci95_lo,ci95_hi,n_seeds_favouring_test,n_seeds_favouring_ref,n_seeds_p_below_alpha,sd_exceeds_effect,n_seeds
+MATCHED (1 change: objective only),E_all_ce_noW,G_all_focal_noW,0.00018010977253494874,0.001342637890566722,-0.0008462996347345466,0.0011944669581931268,6,4,0,True,10
+AS PUBLISHED (3 changes),LEGACY_A,G_all_focal_noW,-0.0036804430075138414,0.0011433848901584455,-0.005016009457663928,-0.002404324508905909,0,10,3,False,10
+composites only (1 change),A_raw_ce_noW,E_all_ce_noW,-0.005061694661347536,0.0010217867497083937,-0.006524607058675992,-0.0036259170341325126,0,10,5,False,10
+focal on raw features (1 change) [MISSING CELL IN R01],A_raw_ce_noW,C_raw_focal_noW,-0.0008096358198489554,0.0016449664759936428,-0.0018619707395466935,0.00021102345588688303,5,5,0,True,10
+"reweighting only, cross-entropy (1 change)",E_all_ce_noW,F_all_ce_W,-0.0005155760559696784,0.000990198481413715,-0.00126776885928077,0.00027151985942332554,2,8,0,True,10
+reweighting on top of focal (1 change),G_all_focal_noW,H_all_focal_W,-0.0007292020585756953,0.001545219051029072,-0.0016290647771243635,0.00018518973563117454,4,6,0,True,10
+R01 'isolated loss effect' (2 changes),F_all_ce_W,G_all_focal_noW,0.0006956858285046272,0.0013234344964251211,-0.00032301737192346266,0.0016848882317113169,6,4,1,True,10

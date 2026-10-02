@@ -1,0 +1,5 @@
+held_out_school,n_val,n_val_positive,E_all_ce_noW,G_all_focal_noW,diff,scope
+AYED_RC,66,5,1.0,1.0,0.0,training partition only (784 pupils)
+KNU_JHS,260,6,1.0,1.0,0.0,training partition only (784 pupils)
+SHI,74,16,0.9643274617539324,0.9797149122807017,0.015387450526769375,training partition only (784 pupils)
+WEWE,355,42,0.9575082872303116,0.9593637193477449,0.001855432117433331,training partition only (784 pupils)

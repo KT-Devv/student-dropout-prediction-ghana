@@ -1,0 +1,2 @@
+composite,in_fold_mean,leaky_mean,mean_abs_difference,pearson_r,identical
+attendance_risk_index,0.17778471337579618,0.1861423566878981,0.022920063694267512,0.9848613441912679,False

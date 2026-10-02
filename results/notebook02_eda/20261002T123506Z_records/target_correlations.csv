@@ -1,0 +1,15 @@
+,dropout_label
+average_attendance,0.7781508907860338
+term_1_attendance,0.7729713873601389
+term_3_attendance,0.7700512014503433
+term_2_attendance,0.7248800204248167
+average_exam_score,0.6864079034366686
+english_exam_score,0.5652702218531259
+math_exam_score,0.5550726369321117
+science_exam_score,0.5538453201061335
+class_participation,0.4051760493192559
+teacher_support_rating,0.34349949400618607
+safety_at_home,0.3026981010587072
+safety_at_school,0.2637500048781633
+age_at_start_of_academic_year,0.2610956986790861
+school_enjoyment,0.2371184200251127

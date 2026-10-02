@@ -1,0 +1,5 @@
+artefact,status,action,used_in_any_reported_result
+results/optuna_trials.csv,SUPERSEDED,"Replaced by search_trials_ALL.csv from this notebook, which has committed generating code. Keep the old file with a README note recording that its generating code was lost, or delete it and say so in M13. Do not delete it silently.",False
+models/best_parameters.json,UNUSED,Regenerated as best_parameters_REGENERATED.json. Neither version is used for any reported arm. State this in M13.,False
+models/best_threshold.txt (0.19),UNUSED — and it contradicts M15,"M15 declares the threshold fixed at 0.5 with no optimisation. Disclose that 0.19 came from an exploratory run, was not used, and report its caseload consequence in the threshold table (Notebook 8) so a reviewer can see what it would have meant.",False
+results/engineered_lightgbm_results.csv (AUC-PR 0.9757),"SUPERSEDED, undocumented change","Records an earlier engineered result against the submitted 0.9789 with nothing naming what changed between them. If the improvement has no named defect behind it, the instrument's rule applies: revert and report the original, or name the fix.",False

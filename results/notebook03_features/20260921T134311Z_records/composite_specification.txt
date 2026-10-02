@@ -1,0 +1,43 @@
+
+COMPOSITE FEATURE SPECIFICATION
+================================================================
+
+1. attendance_risk_index
+   formula : weighted mean over terms of (1 - attendance_fraction)
+   where   : attendance_fraction = clip(attendance, 0, 100.0) / 100.0
+   terms   : ['term_1_attendance', 'term_2_attendance']   (TERM 3 EXCLUDED)
+   weights : term_1 = 0.4, term_2 = 0.6
+   why no term 3 : all 48 pupils with 0% term-3 attendance are dropouts. They
+             had left before term 3 began, so term-3 attendance records the
+             outcome rather than predicting it. R01 gave term 3 the LARGEST
+             weight (0.45) -- on the column most
+             contaminated by the outcome.
+   rationale : the more recent term carries more weight, because a late
+             decline signals departure more strongly than an early dip that
+             later recovers. That makes this feature an operationalisation of
+             the claim that TRAJECTORY matters more than LEVEL -- which is
+             Finn's central claim, not Bronfenbrenner's.
+   R01 fault : attendance was divided by 100 only when max > 1.0, so values
+             above 100% produced a NEGATIVE risk contribution. Now clipped first.
+
+2. socioeconomic_vulnerability_score
+   formula : (leap_flag + feeding_flag + income_vulnerability) / 3
+   where   : income_vulnerability = 1 - (income_ordinal / 2)
+   ordinal : {'Low': 0, 'Medium': 1, 'High': 2}
+   unknown : 'Unknown' -> NaN + a separate family_income_level_missing flag
+   R01 fault : Notebook 9 divided a LABEL-ENCODED income column by its
+             training max. Label encoding is alphabetical, so with both
+             'High' and the misspelling 'Hgh' present the order was
+             (Don't know, High, Hgh, Low, Medium) and the composite was not
+             monotone in income. Notebook 3 used a different, ordinal map.
+             Two definitions, two sets of results, one feature name.
+
+3. behavioral_engagement_index
+   formula : ((1 - warnings_scaled) + participation_scaled + extracurricular_scaled) / 3
+   scaling : MinMaxScaler FITTED ON THE TRAINING FOLD ONLY, applied to the
+             validation fold. This was the fit_transform-on-everything call
+             that GATE-1 cited.
+   free text : {'never': 0, 'once': 1, 'twice': 2, 'none': 0, 'no': 0, 'nil': 0, '4+': 4}
+
+ALL THREE are built inside pipeline.preprocess_inside_fold(), step 11.
+None is ever computed on the full dataset for modelling purposes.

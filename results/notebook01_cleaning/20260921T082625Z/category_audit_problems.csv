@@ -1,0 +1,14 @@
+column,unmapped_values,n_affected
+grade_repetition_count,"<no ordinal map, not listed nominal>",981
+social_studies_exam_score,"<no ordinal map, not listed nominal>",981
+leap_beneficiary_status,Unknown,101
+travel_time_to_school,30-60 min; More than 1 hour; Don't know; Less than 15 minutes,380
+parent_guardian_education_level,Don't know; No formal education,51
+no_of_siblings_in_school,"<no ordinal map, not listed nominal>",972
+own_textbooks,"No-borrow/share; No textbooks; Yes , for all subjects; Yes , for some; Yes, for some",223
+missed_school_for_choreswork,Yes; no; yes; yYes,551
+missed_school_due_to_illness,Yes-once; Yes-more than once; y,188
+family_income_level,Unknown,39
+parent_attends_school_events,Alwaya,1
+behaviour_warnings_punishments,More than 3 times; 2-3 times,96
+extracurricular_activities,3 activities; 4 or more,26

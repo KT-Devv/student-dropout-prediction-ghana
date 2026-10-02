@@ -111,7 +111,7 @@ FREEZE_CONFIRMED = False
 # freeze is that it happened BEFORE the test set was scored and is on the
 # record; a hash is the neatest way to prove that, a dated tag you never
 # revise is the honest alternative.
-FREEZE_TAG = "R02-freeze-2026-09-22-1500"
+FREEZE_TAG = ""
 
 # =====================================================================
 # KNOWN FACTS ABOUT THIS DATASET — assert these, don't assume them
@@ -152,6 +152,21 @@ BEHAVIOR_COLS = {
 SCHOOL_COL = "school_code"
 GENDER_COL = "gender"
 GEO_COL    = "geographic_zone"
+
+# ---------------------------------------------------------------------
+# SCHOOL PROXY VARIABLES (verification finding GATE-1(iv))
+# ---------------------------------------------------------------------
+# Dropping school_code did not remove school identity from the feature
+# matrix. geographic_zone x school_type jointly identify two of the four
+# schools: KNU_JHS is the only peri-urban public school and SHI the only
+# private school, while AYED_RC and WEWE share the rural-public combination.
+# Geographic zone also receives about ten times the attribution under the
+# proposed model that it receives under the legacy baseline.
+#
+# True  -> excluded from the feature matrix (primary analysis)
+# False -> retained, for the side-by-side comparison the work order requires
+SCHOOL_PROXY_COLS = ["geographic_zone", "school_type"]
+DROP_SCHOOL_PROXIES = True
 
 COMPOSITES = [
     "attendance_risk_index",
@@ -306,6 +321,13 @@ KNOWN_CONSTANT = {"academic_year", "district"}
 DROP_DERIVED_DUPLICATES = True
 DERIVED_DUPLICATES = {
     "average_attendance": "arithmetic mean of term_1/2/3_attendance, all retained",
+    # Applied consistently from R03. average_exam_score is the arithmetic mean
+    # of the four subject scores, all of which are retained — exactly the rule
+    # under which average_attendance was dropped. Keeping one and dropping the
+    # other was inconsistent. It also explains the reversed SHAP direction
+    # reported in R6 (rho = +0.21): a derived feature collinear with its own
+    # source columns receives unstable attribution.
+    "average_exam_score": "arithmetic mean of the four subject exam scores, all retained",
 }
 
 # ---------------------------------------------------------------------
@@ -362,6 +384,40 @@ HIGH_MISSINGNESS = {
 }
 MISSINGNESS_INDICATOR_THRESHOLD = 0.05   # add a _missing flag above this rate
 
+# ---------------------------------------------------------------------
+# NEAR-DUPLICATE RECORDS (verification finding N6)
+# ---------------------------------------------------------------------
+# De-duplicating on ALL columns removed 19 rows that were identical including
+# study_id. It did not remove records identical in every substantive field
+# but carrying a different study_id: 68 such rows sit in identical-record
+# groups (all WEWE, all retained), and 10 test pupils have an identical
+# record in the training pool. M3's claim that "no pupil appears more than
+# once" was therefore false, and the split leaked again.
+#
+# "all"     -> R02 behaviour: exact duplicates including identifiers
+# "non_id"  -> R03: identical across every non-identifier column
+DEDUP_MODE = "non_id"
+DEDUP_IGNORE_COLS = ["study_id", "student_id", "record_id", "pupil_id",
+                     "enumerator_initials", "date_recorded",
+                     "headteacher_confirmation_date", "notes_comments"]
+
+# ---------------------------------------------------------------------
+# FOCAL GRADIENT FORM (R03 finding, see losses.py)
+# ---------------------------------------------------------------------
+# "modulated" -> the form used in R01 and R02. Treats (1-pt)^gamma as a fixed
+#                weight rather than differentiating it, so it is NOT the
+#                derivative of the focal loss (max error 0.31 against the
+#                numerical derivative; correlation 0.978; sign agreement 100%).
+#                Guarantees a positive Hessian, which LightGBM requires.
+#                Reproduces every previously reported number.
+# "exact"     -> the true derivative (matches numerical to 1e-9), with the
+#                Hessian floored, since it is negative for ~9.6% of instances.
+#
+# Default is "modulated" so the committed results remain reproducible. The
+# comparison between forms is reported as a sensitivity analysis, and the
+# manuscript describes what is actually implemented.
+FOCAL_GRADIENT = "modulated"
+
 
 def drop_reason(col: str) -> str | None:
     """Why a column is dropped, or None to keep it.
@@ -378,6 +434,9 @@ def drop_reason(col: str) -> str | None:
         return f"temporal leakage ({TEMPORAL_LEAKAGE[c]})"
     if c in DROP_EXACT:
         return "identifier / provenance metadata (exact name)"
+    if DROP_SCHOOL_PROXIES and c in SCHOOL_PROXY_COLS:
+        return ("school proxy (geographic_zone x school_type identifies "
+                "two of the four schools)")
     if FEATURE_SET == "records" and c in QUESTIONNAIRE_COLS:
         return ("differential measurement (questionnaire answered by friends "
                 "for dropouts; secondary analysis only)")
@@ -790,6 +849,9 @@ def write_manifest(out_dir: Path, extra: dict | None = None) -> dict:
             "gamma_reported": GAMMA_REPORTED, "alpha_reported": ALPHA_REPORTED,
             "school_handling": SCHOOL_HANDLING,
             "feature_set": FEATURE_SET,
+            "drop_school_proxies": DROP_SCHOOL_PROXIES,
+            "dedup_mode": DEDUP_MODE,
+            "focal_gradient": FOCAL_GRADIENT,
             "active_composites": ACTIVE_COMPOSITES,
             "fairness_threshold": FAIRNESS_THRESHOLD,
             "drop_derived_duplicates": DROP_DERIVED_DUPLICATES,
@@ -801,6 +863,26 @@ def write_manifest(out_dir: Path, extra: dict | None = None) -> dict:
         manifest.update(extra)
     (out_dir / "RUN_MANIFEST.json").write_text(json.dumps(manifest, indent=2))
     return manifest
+
+
+def require_git_commit(action: str):
+    """GATE-1(iii). The R02 manifest recorded "no_git": true and the freeze was
+    a configuration string, so "after freeze, committed" could not be shown.
+    Any step that must be anchored to a commit calls this first."""
+    gi = git_info()
+    if not gi.get("commit"):
+        raise RuntimeError(
+            f"{action} requires a git commit to anchor provenance, and this "
+            f"working copy is not a git repository ({REPO}).\n"
+            "Run from a clone of the repository, not from a Drive folder, so "
+            "the manifest records a real commit hash."
+        )
+    if gi.get("dirty"):
+        raise RuntimeError(
+            f"{action} requires a clean working tree. Uncommitted source "
+            f"changes: {gi['dirty_paths']}"
+        )
+    return gi
 
 
 def banner(title: str):
@@ -818,3 +900,6 @@ def banner(title: str):
           + ("   (PRIMARY — school records only)" if FEATURE_SET == "records"
              else "   (SECONDARY — includes friend-reported questionnaire items)"))
     print(f"primary metric  : {PRIMARY_METRIC}")
+    print(f"school proxies  : {'DROPPED' if DROP_SCHOOL_PROXIES else 'RETAINED'}")
+    print(f"dedup mode      : {DEDUP_MODE}")
+    print(f"focal gradient  : {FOCAL_GRADIENT}")

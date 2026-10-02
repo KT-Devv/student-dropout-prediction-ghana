@@ -1,0 +1,7 @@
+check,n_zero,n_zero_dropout,n_dropout,pct_zero_that_dropout,n_over_100,pct_over_100,n_fractional,n_above_max,n_unparseable,n_duplicate_rows,n_straddling,n_left_before_term3
+term3_zero_vs_dropout,48.0,48.0,86.0,100.0,,,,,,,,
+social_studies_over_100,,,,,0.0,0.0,,,,,,
+count_grade_repetition_count,,,,,,,147.0,0.0,0.0,,,
+count_no_of_siblings_in_school,,,,,,,208.0,18.0,16.0,,,
+duplicates_straddling_R01_split,,,,,,,,,,19.0,7.0,
+exam_scores_early_leavers,,,,,,,,,,,,48.0

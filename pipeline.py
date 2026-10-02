@@ -27,7 +27,8 @@ from sklearn.metrics import (accuracy_score, precision_score, recall_score,
                              confusion_matrix)
 
 from config import *          # noqa: F401,F403
-from losses import make_focal, predict_proba_focal, balanced_weights
+from losses import (make_focal, make_focal_variant, predict_proba_focal,
+                    balanced_weights, objective_arity, gradient_check)
 
 TARGET_LABEL_MAP = {
     "0 - retained": 0, "1 - dropout": 1,
@@ -371,6 +372,61 @@ def raw_feature_cols(X):
 
 
 # =====================================================================
+# De-duplication (verification finding N6)
+# =====================================================================
+def deduplicate(df, mode=None, report=True):
+    """Remove duplicate pupil records.
+
+    mode "all"    — identical in every column, identifiers included (R02).
+    mode "non_id" — identical in every SUBSTANTIVE column, ignoring study_id,
+                    enumerator initials and dates. Two rows describing the
+                    same pupil with different study IDs are still the same
+                    pupil, and leaving them in put identical records on both
+                    sides of the split.
+
+    Returns (deduplicated_df, info dict).
+    """
+    mode = mode or DEDUP_MODE
+    if mode == "all":
+        subset = None
+    elif mode == "non_id":
+        subset = [c for c in df.columns if c not in DEDUP_IGNORE_COLS]
+    else:
+        raise ValueError(f"unknown DEDUP_MODE: {mode!r}")
+
+    dup_mask = df.duplicated(subset=subset, keep=False)
+    surplus = int(df.duplicated(subset=subset).sum())
+    out = df.drop_duplicates(subset=subset).reset_index(drop=True)
+    info = {
+        "mode": mode,
+        "n_before": int(len(df)),
+        "n_after": int(len(out)),
+        "n_removed": surplus,
+        "n_rows_in_duplicate_groups": int(dup_mask.sum()),
+        "columns_ignored": DEDUP_IGNORE_COLS if subset is not None else [],
+    }
+    if report:
+        print(f"de-duplication [{mode}]: {info['n_before']} -> {info['n_after']} "
+              f"({surplus} removed; {info['n_rows_in_duplicate_groups']} rows "
+              f"belonged to a duplicate group)")
+    return out, info
+
+
+def duplicates_across_split(df, train_idx, test_idx, mode=None):
+    """How many test pupils have an identical record in the training pool?
+    Reported so the leak is quantified rather than asserted away."""
+    mode = mode or DEDUP_MODE
+    subset = None if mode == "all" else [c for c in df.columns
+                                         if c not in DEDUP_IGNORE_COLS]
+    key = df[subset] if subset else df
+    key = key.astype(str).agg("|".join, axis=1)
+    tr, te = set(key.iloc[train_idx]), set(key.iloc[test_idx])
+    shared = tr & te
+    n_test_rows = int(key.iloc[test_idx].isin(shared).sum())
+    return {"n_shared_records": len(shared), "n_test_rows_affected": n_test_rows}
+
+
+# =====================================================================
 # The frozen split and the CV iterator
 # =====================================================================
 def frozen_split(df, target_col=TARGET):
@@ -463,7 +519,7 @@ def fit_arm(name, X_tr, y_tr, seed=SPLIT_SEED, gamma=GAMMA_REPORTED,
         def predict(X_eval):
             return model.predict_proba(X_eval[cols])[:, 1]
     else:
-        obj, ev = make_focal(gamma, alpha)
+        obj, ev = make_focal_variant(gamma, alpha, form=FOCAL_GRADIENT)
         model = LGBMClassifier(objective=obj, **kw)
         model.fit(X_tr[cols], y_tr, sample_weight=sw, eval_metric=ev)
 
@@ -521,6 +577,67 @@ def load_model_bundle(path):
         def predict(X_eval):
             return m.predict_proba(X_eval[cols])[:, 1]
     return predict, cols, payload
+
+
+# =====================================================================
+# Weighting-mechanism assertions (verification finding N5)
+# =====================================================================
+def assert_weighting_effective(X_tr, y_tr, seed=SPLIT_SEED, verbose=True):
+    """Prove that the reweighting dimension of the grid is real.
+
+    Two separate failure modes, both of which silently collapsed arms in
+    earlier revisions:
+
+    (1) is_unbalance is inert under a custom objective. Checked in R02.
+    (2) sample_weight is never passed to a TWO-argument custom objective.
+        Not checked in R02, and it silently made arms D and H identical to
+        C and G. That is what this function exists to catch.
+
+    Raises AssertionError if either mechanism is inoperative.
+    """
+    from lightgbm import LGBMClassifier
+
+    results = {}
+    obj, ev = make_focal_variant(GAMMA_REPORTED, ALPHA_REPORTED, form=FOCAL_GRADIENT)
+    arity = objective_arity(obj)
+    results["objective_arity"] = arity
+    assert arity == 3, (
+        f"focal objective takes {arity} arguments; LightGBM passes sample "
+        f"weights only to a three-argument objective, so reweighting would be "
+        f"silently ignored (verification finding N5)")
+
+    cols = list(X_tr.columns)
+    sw = balanced_weights(y_tr)
+    kw = dict(random_state=seed, **SHARED_PARAMS)
+
+    m_off = LGBMClassifier(objective=obj, **kw).fit(X_tr[cols], y_tr)
+    m_on = LGBMClassifier(objective=obj, **kw).fit(X_tr[cols], y_tr, sample_weight=sw)
+    p_off = predict_proba_focal(m_off, X_tr, cols)
+    p_on = predict_proba_focal(m_on, X_tr, cols)
+    diff = float(np.abs(p_off - p_on).max())
+    results["focal_sample_weight_max_prediction_diff"] = diff
+    results["focal_sample_weight_effective"] = bool(diff > 1e-9)
+    assert diff > 1e-9, (
+        "sample_weight has no effect under the focal objective: arms D and H "
+        "are identical to C and G. The grid would contain six distinct models, "
+        "not eight (verification finding N5).")
+
+    m_u_off = LGBMClassifier(objective=obj, is_unbalance=False, **kw).fit(X_tr[cols], y_tr)
+    m_u_on = LGBMClassifier(objective=obj, is_unbalance=True, **kw).fit(X_tr[cols], y_tr)
+    d2 = float(np.abs(predict_proba_focal(m_u_off, X_tr, cols)
+                      - predict_proba_focal(m_u_on, X_tr, cols)).max())
+    results["is_unbalance_inert_under_custom_objective"] = bool(d2 <= 1e-12)
+    results["is_unbalance_max_prediction_diff"] = d2
+
+    if verbose:
+        print("WEIGHTING MECHANISM CHECKS")
+        print(f"  focal objective arity            : {arity}  (must be 3)")
+        print(f"  sample_weight changes predictions: {results['focal_sample_weight_effective']} "
+              f"(max diff {diff:.3e})")
+        print(f"  is_unbalance inert under custom  : "
+              f"{results['is_unbalance_inert_under_custom_objective']} "
+              f"(max diff {d2:.3e})")
+    return results
 
 
 # =====================================================================
@@ -650,6 +767,7 @@ def compare_arms(fold_df, ref_arm, test_arm, label="", metric=PRIMARY_METRIC):
             "diff_mean": d.mean(), "sign": "+" if d.mean() > 0 else "-",
             "wilcoxon_p": p,
             "cohens_d": d.mean() / pooled if pooled > 0 else np.nan,
+            "cohens_dz": d.mean() / d.std(ddof=1) if d.std(ddof=1) > 0 else np.nan,
             "ci95_lo": lo, "ci95_hi": hi, "n_folds": len(d),
         })
     per_seed = pd.DataFrame(per_seed)
@@ -667,6 +785,80 @@ def compare_arms(fold_df, ref_arm, test_arm, label="", metric=PRIMARY_METRIC):
         "n_seeds_p_below_alpha": int((per_seed["wilcoxon_p"] < ALPHA_LEVEL).sum()),
         "sd_exceeds_effect": bool(sd >= abs(grand)) if np.isfinite(sd) else None,
         "n_seeds": len(per_seed),
+    }
+    return per_seed, summary
+
+
+# =====================================================================
+# Seed-level inference (verification finding Q6 / GATE-4)
+# =====================================================================
+def seed_level_inference(fold_df, ref_arm, test_arm, metric=PRIMARY_METRIC,
+                         n_boot=N_BOOT, seed=SPLIT_SEED):
+    """Inference at the level at which the observations are independent.
+
+    The bootstrap in compare_arms() resamples 250 paired fold differences
+    pooled across seeds. Those folds are not independent: ten seeds
+    re-partition the SAME 784 pupils. Pooling them treats one sample as ten.
+
+    This function works with the ten seed MEANS instead — one value per
+    re-partitioning — and reports:
+      * a t-interval over the seed means
+      * a hierarchical bootstrap (resample seeds, then folds within seed)
+      * paired Cohen's d_z per seed, and a summary across seeds
+
+    Neither interval describes uncertainty about a population; both describe
+    consistency across re-partitionings of this sample. That is stated
+    wherever they are reported.
+    """
+    from scipy.stats import t as student_t
+
+    wide = fold_df.pivot_table(index=["seed", "fold"], columns="arm", values=metric)
+    diffs = (wide[test_arm] - wide[ref_arm]).dropna()
+
+    per_seed = []
+    for sd, g in diffs.groupby(level="seed"):
+        v = g.to_numpy()
+        sd_v = v.std(ddof=1)
+        per_seed.append({
+            "seed": int(sd), "n_folds": len(v), "mean_diff": float(v.mean()),
+            "sd_diff": float(sd_v),
+            "cohens_dz": float(v.mean() / sd_v) if sd_v > 0 else np.nan,
+        })
+    per_seed = pd.DataFrame(per_seed)
+
+    means = per_seed["mean_diff"].to_numpy()
+    k = len(means)
+    m, sd_m = float(means.mean()), float(means.std(ddof=1))
+    se = sd_m / np.sqrt(k)
+    tcrit = float(student_t.ppf(0.975, k - 1))
+    t_lo, t_hi = m - tcrit * se, m + tcrit * se
+
+    rng = np.random.default_rng(seed)
+    by_seed = [g.to_numpy() for _, g in diffs.groupby(level="seed")]
+    boot = np.empty(n_boot)
+    for b in range(n_boot):
+        pick = rng.integers(0, k, k)
+        vals = [rng.choice(by_seed[i], size=len(by_seed[i]), replace=True).mean()
+                for i in pick]
+        boot[b] = float(np.mean(vals))
+    h_lo, h_hi = (float(x) for x in np.quantile(boot, [0.025, 0.975]))
+
+    summary = {
+        "contrast": f"{test_arm} - {ref_arm}", "metric": metric,
+        "n_seeds": k, "mean_of_seed_means": m, "sd_of_seed_means": sd_m,
+        "se_of_seed_means": float(se),
+        "t_interval_lo": float(t_lo), "t_interval_hi": float(t_hi),
+        "hierarchical_boot_lo": h_lo, "hierarchical_boot_hi": h_hi,
+        "excludes_zero_t": bool(t_hi < 0 or t_lo > 0),
+        "excludes_zero_hierarchical": bool(h_hi < 0 or h_lo > 0),
+        "cohens_dz_min": float(per_seed["cohens_dz"].min()),
+        "cohens_dz_max": float(per_seed["cohens_dz"].max()),
+        "cohens_dz_mean": float(per_seed["cohens_dz"].mean()),
+        "n_seeds_favouring_test": int((per_seed["mean_diff"] > 0).sum()),
+        "n_seeds_favouring_ref": int((per_seed["mean_diff"] < 0).sum()),
+        "note": ("Seeds re-partition the same 784 pupils. These intervals "
+                 "describe consistency across re-partitionings of this sample, "
+                 "not uncertainty about a population."),
     }
     return per_seed, summary
 

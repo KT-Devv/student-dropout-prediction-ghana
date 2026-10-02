@@ -1,0 +1,13 @@
+rank,feature,family,mean_abs_shap,value_shap_corr,direction,expected_direction,matches_expectation,diagnosis,diagnosis_note
+1,attendance_risk_index,attendance_trajectory,0.7759768309309891,0.1905894036386797,no consistent direction,higher -> MORE risk,no,operationalisation,no consistent direction; function of term_1 and term_2 attendance
+2,term_1_attendance,attendance_trajectory,0.40942859901046214,-0.2517572935578351,higher value -> LESS dropout risk,higher -> LESS risk,yes,consistent,direction matches the expectation
+3,science_exam_score,academic_performance,0.37398901902407683,-0.4344980082962728,higher value -> LESS dropout risk,higher -> LESS risk,yes,consistent,direction matches the expectation
+4,grade_repetition_count,academic_performance,0.3572039336474156,0.6663756744865259,higher value -> MORE dropout risk,higher -> MORE risk,yes,consistent,direction matches the expectation
+5,age_at_start_of_academic_year,demographic,0.18599336501427835,0.3216884321862962,higher value -> MORE dropout risk,higher -> MORE risk,yes,consistent,direction matches the expectation
+6,social_studies_exam_score,academic_performance,0.11372789380550304,-0.057601778769265276,no consistent direction,higher -> LESS risk,no,inconclusive,attribution shows no consistent direction
+7,term_2_attendance,attendance_trajectory,0.11308065494176672,-0.3408699334701894,higher value -> LESS dropout risk,higher -> LESS risk,yes,consistent,direction matches the expectation
+8,english_exam_score,academic_performance,0.09120676513085617,-0.20787430516411884,higher value -> LESS dropout risk,higher -> LESS risk,yes,consistent,direction matches the expectation
+9,math_exam_score,academic_performance,0.08318643247779507,-0.3759513840779833,higher value -> LESS dropout risk,higher -> LESS risk,yes,consistent,direction matches the expectation
+10,class_level,academic_performance,0.03154909511586297,0.2721280454557017,higher value -> MORE dropout risk,higher -> LESS risk,no,requires investigation,"reversed against expectation, not a derived feature"
+11,gender,demographic,0.012705090077644815,0.15831579709091873,categorical - see beeswarm,no directional expectation,n/a,not applicable,categorical; direction undefined for an encoded label
+12,grade_repetition_count_missing,academic_performance,7.120067615128552e-05,-0.3879778865554699,higher value -> LESS dropout risk,no directional expectation,n/a,not applicable,no directional expectation stated

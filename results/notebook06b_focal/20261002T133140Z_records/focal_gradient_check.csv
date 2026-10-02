@@ -1,0 +1,2 @@
+gamma,alpha,n,modulated_max_abs_error,modulated_corr_with_true,modulated_sign_agreement,exact_max_abs_error,modulated_hessian_min,exact_hessian_pct_floored
+2.0,0.75,500,0.31140668802700106,0.9775284038459152,1.0,1.2697655149551679e-09,4.587318355077278e-09,0.096

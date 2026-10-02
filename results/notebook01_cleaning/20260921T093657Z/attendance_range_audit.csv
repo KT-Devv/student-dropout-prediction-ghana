@@ -1,0 +1,4 @@
+column,min,max,n_above_100,n_below_0,n_exactly_0,n_missing
+term_1_attendance,20.0,100.5,1,0,0,0
+term_2_attendance,10.0,102.9,2,0,0,1
+term_3_attendance,0.0,99.0,0,0,48,0

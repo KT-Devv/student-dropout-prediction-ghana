@@ -1,0 +1,81 @@
+{
+  "run_dir": "results/notebook04_baselines/20261002T123959Z_records",
+  "generated_utc": "2026-10-02T12:48:40Z",
+  "git": {
+    "commit": "",
+    "branch": "",
+    "dirty": false,
+    "dirty_paths": [],
+    "no_git": true,
+    "freeze_tag": ""
+  },
+  "host": "a607d458c07a",
+  "platform": "Linux-6.6.122+-x86_64-with-glibc2.39",
+  "python": "3.13.15",
+  "protocol": {
+    "split_seed": 42,
+    "test_size": 0.2,
+    "seeds": [
+      42,
+      123,
+      456,
+      789,
+      1024,
+      2048,
+      3333,
+      5555,
+      7777,
+      9999
+    ],
+    "n_splits": 5,
+    "n_repeats": 5,
+    "primary_metric": "auc_pr",
+    "shared_params": {
+      "n_estimators": 300,
+      "num_leaves": 31,
+      "learning_rate": 0.05,
+      "subsample": 0.8,
+      "colsample_bytree": 0.8,
+      "verbosity": -1
+    },
+    "gamma_reported": 2.0,
+    "alpha_reported": 0.75,
+    "school_handling": "drop",
+    "feature_set": "records",
+    "drop_school_proxies": true,
+    "dedup_mode": "non_id",
+    "focal_gradient": "modulated",
+    "active_composites": [
+      "attendance_risk_index"
+    ],
+    "fairness_threshold": 0.1,
+    "drop_derived_duplicates": true,
+    "suspect_column_actions": {
+      "social_studies_exam_score": "keep"
+    }
+  },
+  "notebook": "04_baselines",
+  "test_set_scored": false,
+  "seeds": [
+    42,
+    123,
+    456,
+    789,
+    1024,
+    2048,
+    3333,
+    5555,
+    7777,
+    9999
+  ],
+  "models": [
+    "Random Forest",
+    "CatBoost",
+    "LightGBM",
+    "XGBoost",
+    "Logistic Regression",
+    "Decision Tree"
+  ],
+  "search_trials_per_model": 0,
+  "ranking_metric": "auc_pr"
+}

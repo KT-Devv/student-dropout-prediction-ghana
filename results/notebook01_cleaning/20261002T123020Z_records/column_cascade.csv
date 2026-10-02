@@ -1,0 +1,12 @@
+step,criterion,n_dropped,n_remaining,columns
+0. raw workbook,-,0.0,48.0,
+1. target leakage,derived from or dated by the outcome,1.0,47.0,headteacher_confirmation_date
+1b. temporal leakage,recorded after the outcome occurred,1.0,46.0,term_3_attendance
+1c. differential measurement,"answered by friends for dropouts, by pupils for stayers",23.0,23.0,school_feeding_status; leap_beneficiary_status; travel_time_to_school; mode_of_transport_to_school; govt_support; parent_guardian_education_level; parent_guardian_occupation; no_of_siblings_in_school; home_has_electricity; own_textbooks; daily_study_hours_at_home; safety_at_home; safety_at_school; teacher_support_rating; school_enjoyment; missed_school_for_choreswork; missed_school_due_to_illness; barriers_to_regular_attendance; family_income_level; parent_attends_school_events; behaviour_warnings_punishments; class_participation; extracurricular_activities
+1d. school proxy,zone x school_type identifies two of the four schools,2.0,21.0,geographic_zone; school_type
+2. identifier / provenance,exact name or whole underscore token,4.0,17.0,study_id; data_source; enumerator_initials; date_recorded
+3. derived duplicate,arithmetically recoverable from retained columns,2.0,15.0,average_attendance; average_exam_score
+4. failed range validation,values outside the declared scale,0.0,15.0,
+5. entirely empty,100% missing,1.0,14.0,notes__comments
+6. near-unique text,">98% distinct values, text only",0.0,14.0,
+7. constant / near-constant,pruned IN-FOLD on training statistics,,,fold-dependent — see pipeline.preprocess_inside_fold

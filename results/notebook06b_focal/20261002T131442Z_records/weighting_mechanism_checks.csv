@@ -1,0 +1,2 @@
+objective_arity,focal_sample_weight_max_prediction_diff,focal_sample_weight_effective,is_unbalance_inert_under_custom_objective,is_unbalance_max_prediction_diff
+3,0.038928226961044476,True,True,0.0

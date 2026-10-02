@@ -1,0 +1,10 @@
+,count
+R01 RandomizedSearchCV candidates (RF 40 + LGBM 40 + CatBoost 15),95
+R01 augmentation configurations,24
+R01 legacy Optuna trials (generating code lost),20
+baseline classifiers (Notebook 4),6
+imbalance strategies (Notebook 5),5
+augmentation configurations (Notebook 5b),5
+"search trials, this notebook",120
+ablation grid arms (Notebook 6b),9
+gamma x alpha cells (Notebook 6b),12

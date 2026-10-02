@@ -1,0 +1,11 @@
+check,pass,detail
+"validation columns identical to training, same order",True,12 features
+no NaN in training fold,True,
+no NaN in validation fold,True,
+expected composites built for FEATURE_SET='records',True,['attendance_risk_index']
+no questionnaire item in a records-only model,True,
+no leakage column survived,True,
+school_code handled per config,True,SCHOOL_HANDLING='drop'
+attendance within physical bound,True,
+no train/val row index overlap,True,
+training fold unchanged when the validation fold changes,True,<- this is the property GATE-1 requires

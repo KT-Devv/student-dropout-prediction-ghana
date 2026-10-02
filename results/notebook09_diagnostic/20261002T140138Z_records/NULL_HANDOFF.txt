@@ -1,0 +1,29 @@
+NULL HANDOFF — run 20261002T140138Z_records
+
+ROUTED          : "Mechanism is specific, effect washes out at your level"
+                  -> start at cause 12, then cause 4 (effective n at the
+                     cluster level).
+                  Secondary: causes 7, 9. Confirmed downstream: cause 17.
+                  Ruled out on evidence: causes 3, 5 (prediction SD 0.2667).
+
+CONTRAST        : E_all_ce_noW vs G_all_focal_noW
+                  identical feature matrix, identical weighting, one argument
+                  different. R01's contrast varied three things.
+
+TEN SEEDS       : grand mean +0.00018
+                  between-seed SD 0.00134
+                  95% CI [-0.00085, +0.00119]
+                  favouring focal 6/10
+                  seeds with p < 0.05: 0
+
+POWER           : MDE 0.0046 vs observed 0.0002 -> UNDERPOWERED
+
+Q23             : 3 of 8 conditions fail
+RESULT TYPE     : NULL (unestablished)
+
+PIPELINE        : all preprocessing in-fold; CV on the training pool only;
+                  test partition scored once in Notebook 8 after freeze.
+
+PERMANENT       : the R01 test partition was scored across six notebooks.
+                  No re-run repairs the history of a partition. State it in
+                  the limitations.
