@@ -111,7 +111,7 @@ FREEZE_CONFIRMED = True
 # freeze is that it happened BEFORE the test set was scored and is on the
 # record; a hash is the neatest way to prove that, a dated tag you never
 # revise is the honest alternative.
-FREEZE_TAG = "R03-freeze-2026-10-02-2000"
+FREEZE_TAG = "R03-freeze-2026-10-02-2200"
 
 # =====================================================================
 # KNOWN FACTS ABOUT THIS DATASET — assert these, don't assume them

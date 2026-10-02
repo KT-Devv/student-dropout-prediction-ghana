@@ -1,0 +1,4 @@
+metric,construct,behavioural_meaning,stakeholder_consequence,base_rate_pct
+AUC-PR,minority-class ranking quality,triage order: which pupils a headteacher reviews first,"at a capacity of 10 reviews per 100 pupils, 94% of pupils who actually left are in the list",9.1
+Recall (dropout class),detection of departing pupils,proportion reached before they leave,"at the 0.5 threshold, 0.901 of departing pupils are flagged; 0.9 per 100 pupils are missed",9.1
+Precision (dropout class),review burden,share of flagged pupils who genuinely need review,"at the 0.5 threshold, 8.6 pupils per 100 flagged, 96% of them genuine",9.1

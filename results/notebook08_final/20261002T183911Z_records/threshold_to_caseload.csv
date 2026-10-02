@@ -1,0 +1,10 @@
+threshold,flagged_per_100,precision_among_flagged,recall,missed_dropouts_per_100,arm
+0.1,10.8212,0.8111,0.9465,0.4874,G_all_focal_noW
+0.19,9.743,0.8847,0.935,0.5934,G_all_focal_noW
+0.2,9.7033,0.8878,0.9347,0.596,G_all_focal_noW
+0.3,9.2026,0.9209,0.9219,0.7126,G_all_focal_noW
+0.4,8.8715,0.9419,0.9104,0.8185,G_all_focal_noW
+0.5,8.6437,0.9566,0.901,0.9033,G_all_focal_noW
+0.6,8.4318,0.9691,0.8914,0.9907,G_all_focal_noW
+0.7,8.2093,0.9776,0.8762,1.1311,G_all_focal_noW
+0.8,7.955,0.9893,0.8602,1.2768,G_all_focal_noW
