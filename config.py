@@ -101,8 +101,8 @@ FAIRNESS_THRESHOLD = 0.10
 # Observed: 4 schools, WEWE alone holds 500 of the 1000 records.
 SCHOOL_HANDLING = "drop"
 
-SCORE_TEST = False
-FREEZE_CONFIRMED = False
+SCORE_TEST = True
+FREEZE_CONFIRMED = True
 
 # Without git there is no commit hash to anchor the freeze to, so record the
 # freeze manually. Set this to a fixed, dated string at the moment you freeze
@@ -111,7 +111,7 @@ FREEZE_CONFIRMED = False
 # freeze is that it happened BEFORE the test set was scored and is on the
 # record; a hash is the neatest way to prove that, a dated tag you never
 # revise is the honest alternative.
-FREEZE_TAG = ""
+FREEZE_TAG = "R03-freeze-2026-10-02-1900"
 
 # =====================================================================
 # KNOWN FACTS ABOUT THIS DATASET — assert these, don't assume them
