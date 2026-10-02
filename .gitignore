@@ -3,16 +3,25 @@ data-raw/
 data-processed/cleaned_data.csv
 data-processed/*.xlsx
 
-# But DO commit results/ — Q4 failed because the diagnostic CSVs backing
-# Table 5, the MDE and the zero-flip claim were not in the repository.
-# Nothing under results/ is ignored here, deliberately.
+# Newly ignored: derived and synthetic CSVs, large training artifacts
+# Do NOT ignore results/ — committed results are deliberate and used for diagnostics
+data-processed/*.csv
+data-processed/*_focal.csv
+data-processed/*ctgan*.csv
+
+# Archive contains archived splits and artifacts from earlier analyses; do not keep in history
+archive/
 
 __pycache__/
 *.pyc
 .ipynb_checkpoints/
 catboost_info/
 
-
-
 **/test_false_negatives.csv
 **/*_snapshot.csv
+
+# Common env / OS noise
+.venv/
+env/
+*.egg-info
+.DS_Store
